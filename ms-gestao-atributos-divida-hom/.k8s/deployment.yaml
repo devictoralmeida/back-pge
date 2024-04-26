@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-gestao-atributos-divida
+  namespace: homol
+  labels:
+    app: ms-gestao-atributos-divida
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-gestao-atributos-divida
+  strategy: 
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: ms-gestao-atributos-divida
+    spec:
+      containers:
+      - name: ms-gestao-atributos-divida
+        image: gcr.io/pge-ce-dev-a937/$IMAGE
+        env:
+        - name: DB_USER
+          value: "db_origem_debito_user_homol"
+        - name: DB_PASS
+          value: "eN7g)kI#:[r_h&u4"
+        - name: DB_DATABASE
+          value: "db_origem_debito_homol"
+        - name: DB_HOST
+          value: "10.102.32.5"
+        - name: DB_PORT
+          value: "5432"
+        ports:
+        - containerPort: 8080
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: ms-gestao-atributos-divida
+spec:
+  healthCheck:
+    checkIntervalSec: 15
+    timeoutSec: 15
+    healthyThreshold: 1
+    unhealthyThreshold: 5
+    type: HTTP
+    requestPath: /health-check
+    port: 8080

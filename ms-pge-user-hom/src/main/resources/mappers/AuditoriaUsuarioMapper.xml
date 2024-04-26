@@ -1,0 +1,98 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="UsuarioDao">
+
+    <select id="countHistorysUpdates" resultType="int">
+        SELECT COUNT(distinct(a.ci_auditoria))
+        FROM tb_auditoria a
+        INNER JOIN tb_usuario_aud ua ON a.ci_auditoria = ua.cd_auditoria
+        WHERE a.ci_auditoria IS NOT NULL
+        AND ua.ci_usuario = #{id}
+        AND tp_movimento IS NOT NULL
+        AND
+        CASE
+        WHEN a.ds_dados_antigos IS NULL THEN tp_movimento = 0
+        ELSE (a.ds_dados_antigos IS NOT NULL AND tp_movimento != 0)
+        END
+        AND NOT EXISTS (
+        SELECT 1
+        FROM tb_usuario_aud
+        WHERE
+        ci_usuario = #{id}
+        AND tp_movimento = #{tipoMovimento}
+        );
+    </select>
+
+    <resultMap id="resultMapAuditoria" type="br.gov.ce.pge.gestao.dto.response.AuditoriaUsuarioDto">
+
+        <result property="dataMovimento" column="dt_movimento" />
+        <result property="dadosAntigos" column="ds_dados_antigos" />
+        <result property="id" column="ci_usuario" />
+        <result property="nome" column="nm_usuario_tb_usuario" />
+        <result property="nomeUsuario" column="nm_auditoria_nome_usuario" />
+        <result property="situacaoUsuario" column="ds_situacao_usuario" />
+        <result property="tipoUsuario" column="tp_usuario" />
+        <result property="cpf" column="nr_cpf_usuario" />
+        <result property="orgao" column="ds_orgao_usuario" />
+        <result property="area" column="ds_area_usuario" />
+        <result property="email" column="ds_email_usuario" />
+        <result property="usuarioRede" column="nm_usuario_rede" />
+        <result property="idsPerfisAdicionados" column="ids_perfis_adicionados" />
+        <result property="idsPerfisRemovidos" column="ids_perfis_removidos" />
+        <result property="idsSistemaAdicionados" column="ids_sistema_adicionados" />
+        <result property="idsSistemaRemovidos" column="ids_sistema_removidos" />
+
+    </resultMap>
+
+    <select id="findHistorysUpdates" resultMap="resultMapAuditoria">
+        SELECT
+        a.dt_movimento, a.nm_usuario as nm_auditoria_nome_usuario, a.ds_dados_antigos,
+        ua.nm_usuario as nm_usuario_tb_usuario, ua.ci_usuario, ua.ds_situacao_usuario,
+        ua.tp_usuario, ua.nr_cpf_usuario, ua.ds_orgao_usuario,
+        ua.ds_area_usuario, ua.ds_email_usuario, ua.nm_usuario_rede,
+        CONCAT(STRING_AGG(CASE WHEN upa.tp_movimento = 0 THEN upa.cd_perfil_acesso::text END, ','),'') AS ids_perfis_adicionados,
+        CONCAT(STRING_AGG(CASE WHEN upa.tp_movimento = 2 THEN upa.cd_perfil_acesso::text END, ','),'') AS ids_perfis_removidos,
+        CONCAT(STRING_AGG(CASE WHEN usa.tp_movimento = 0 THEN usa.cd_sistema::text END, ','),'') AS ids_sistema_adicionados,
+        CONCAT(STRING_AGG(CASE WHEN usa.tp_movimento = 2 THEN usa.cd_sistema::text END, ','),'') AS ids_sistema_removidos
+        FROM tb_auditoria a
+        INNER JOIN tb_usuario_aud ua ON a.ci_auditoria = ua.cd_auditoria
+        LEFT JOIN tb_usuario_sistema_aud usa on a.ci_auditoria = usa.cd_auditoria
+        LEFT JOIN tb_usuario_perfil_acesso_aud upa on a.ci_auditoria = upa.cd_auditoria
+        WHERE a.ci_auditoria IS NOT NULL
+        AND ua.ci_usuario = #{id}
+        AND
+        CASE
+        WHEN a.ds_dados_antigos IS NULL THEN ua.tp_movimento = 0
+        ELSE (a.ds_dados_antigos IS NOT NULL AND ua.tp_movimento != 0)
+        END
+        AND NOT EXISTS (
+        SELECT 1
+        FROM tb_usuario_aud
+        WHERE
+        ci_usuario = #{id}
+        AND tp_movimento = #{tipoMovimento}
+        )
+        GROUP BY
+        a.ci_auditoria,
+        a.dt_movimento,
+        a.nm_usuario,
+        a.ds_dados_antigos,
+        ua.ci_usuario,
+        ua.nm_usuario,
+        ua.ds_situacao_usuario,
+        ua.tp_usuario,
+        ua.nr_cpf_usuario,
+        ua.ds_orgao_usuario,
+        ua.ds_area_usuario,
+        ua.ds_email_usuario,
+        ua.nm_usuario_rede
+        ORDER BY
+        a.ci_auditoria DESC
+        OFFSET #{offset} ROWS
+        FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+
+</mapper>

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-pge-oauth
+  namespace: homol
+  labels:
+    app: ms-pge-oauth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-pge-oauth
+  template:
+    metadata:
+      labels:
+        app: ms-pge-oauth
+    spec:
+      containers:
+        - name: ms-pge-oauth
+          image: gcr.io/pge-ce-dev-a937/$IMAGE
+          env:
+            - name: EUREKA_SERVER
+              value: "http://ms-eureka-server-service.homol.svc.cluster.local:8761/eureka"
+
+            - name: USER_SERVICE
+              value: 'http://api-usuario-service.homol.svc.cluster.local:8504'
+
+            - name: JWT_SECRET
+              value: 'ms-pge-portal'
+          ports:
+            - containerPort: 8505
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: ms-pge-oauth
+spec:
+  healthCheck:
+    checkIntervalSec: 15
+    timeoutSec: 15
+    healthyThreshold: 1
+    unhealthyThreshold: 5
+    type: HTTP
+    requestPath: /health-check
+    port: 8505
+

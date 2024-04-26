@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-usuario
+  namespace: test
+  labels:
+    app: api-usuario
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-usuario
+  template:
+    metadata:
+      labels:
+        app: api-usuario
+    spec:
+      containers:
+        - name: api-usuario
+          image: gcr.io/pge-ce-dev-a937/$IMAGE
+          env:
+            - name: DB_USER
+              value: "db_pge_user"
+
+            - name: DB_PASS
+              value: '[^VLJG-";\nly@OA'
+
+            - name: DB_DATABASE
+              value: 'db_pge_user_test'
+
+            - name: DB_HOST
+              value: '10.102.32.5'
+
+            - name: DB_PORT
+              value: '5432'
+
+            - name: EUREKA_SERVER
+              value: "http://ms-eureka-server-service.test.svc.cluster.local:8761/eureka"
+            
+            - name: PORTAL_SERVICE
+              value: "http://ms-pge-portal-colaborador-service.test.svc.cluster.local:8507"
+
+            - name: URL_PORTAL_DIVIDA
+              value: "https://test.portaldivida.goldenclouddev.com.br/"
+            
+            - name: URL_PORTAL_ORIGENS
+              value: "https://test.portaldivida.goldenclouddev.com.br/"  
+          ports:
+            - containerPort: 8504
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: api-usuario
+spec:
+  healthCheck:
+    checkIntervalSec: 15
+    timeoutSec: 15
+    healthyThreshold: 1
+    unhealthyThreshold: 5
+    type: HTTP
+    requestPath: /health-check
+    port: 8504

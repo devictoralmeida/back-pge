@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="PrettierConfiguration">
+    <option name="myConfigurationMode" value="AUTOMATIC" />
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State />
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>User defined</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectRootManager">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="SaveActionSettings">
+    <option name="actions">
+      <set>
+        <option value="activate" />
+        <option value="organizeImports" />
+        <option value="reformat" />
+        <option value="unqualifiedFieldAccess" />
+        <option value="unqualifiedMethodAccess" />
+        <option value="missingOverrideAnnotation" />
+        <option value="useBlocks" />
+        <option value="unnecessaryFinalOnLocalVariableOrParameter" />
+      </set>
+    </option>
+    <option name="configurationPath" value="" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="4" Folder0="C:\Users\Victor\Desktop\Victor\estudos\java\IntelliJ.Portuguese.Brazil.Dictionary" Folder1="C:\Users\Victor\Desktop\Victor\estudos\java\IntelliJ.Portuguese.Brazil.Dictionary" Folder2="C:\Users\Victor\Desktop\Victor\estudos\java\IntelliJ.Portuguese.Brazil.Dictionary" Folder3="C:\Users\Victor\Desktop\Victor\estudos\java\IntelliJ.Portuguese.Brazil.Dictionary" CustomDictionaries="4" CustomDictionary0="C:\Users\Victor\Desktop\Victor\estudos\java\IntelliJ.Portuguese.Brazil.Dictionary\portuguese-brazil.dic" CustomDictionary1="C:\Users\Victor\Desktop\Victor\estudos\java\IntelliJ.Portuguese.Brazil.Dictionary\portuguese-brazil_technical-terms.dic" CustomDictionary2="C:\Users\Victor\Desktop\Victor\estudos\java\IntelliJ.Portuguese.Brazil.Dictionary\portuguese-brazil_technical-terms_without-accents.dic" CustomDictionary3="C:\Users\Victor\Desktop\Victor\estudos\java\IntelliJ.Portuguese.Brazil.Dictionary\portuguese-brazil_without-accents.dic" DefaultDictionary="project-level" UseSingleDictionary="true" transferred="false" />
+</project>

@@ -1,0 +1,30 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  image: google/cloud-sdk
+  script:
+    - echo "$BASE64_GOOGLE_CLOUD_CREDENTIALS" > /tmp/key.json
+    - gcloud auth activate-service-account --key-file /tmp/key.json
+    - gcloud config set project $GCP_PROJECT_ID
+    - gcloud auth configure-docker
+    - sed "s/\$IMAGE/ms-pge-oauth-dev:${CI_COMMIT_SHORT_SHA}/g" cloudbuild.yaml > cloudbuild_deploy.yaml
+    - gcloud builds submit --config=cloudbuild_deploy.yaml .
+  only:
+    - hom
+deploy:
+  stage: deploy
+  image: google/cloud-sdk
+  script:
+    - echo "$BASE64_GOOGLE_CLOUD_CREDENTIALS" > /tmp/key.json
+    - gcloud auth activate-service-account --key-file /tmp/key.json
+    - gcloud config set project $GCP_PROJECT_ID
+    - gcloud auth configure-docker
+    - gcloud container clusters get-credentials pge-ce-cluster-dev --zone southamerica-east1-b --project pge-ce-dev-a937
+    - sed "s/\$IMAGE/ms-pge-oauth-dev:${CI_COMMIT_SHORT_SHA}/g" .k8s/deployment.yaml | kubectl apply -f -
+  only:
+    - hom
+  needs:
+    - build

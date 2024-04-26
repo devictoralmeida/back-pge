@@ -1,0 +1,18 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/pge-ce-dev-a937/$IMAGE",
+        ".",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "gcr.io/pge-ce-dev-a937/$IMAGE",
+      ]
+options:
+  logging: CLOUD_LOGGING_ONLY
+

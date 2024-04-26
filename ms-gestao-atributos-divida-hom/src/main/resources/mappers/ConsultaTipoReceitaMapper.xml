@@ -1,0 +1,60 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TipoReceitaDao">
+
+	<resultMap id="resultTipoReceitaFilter"
+		type="br.gov.ce.pge.gestao.dto.response.TipoReceitaConsultaFilterResponseDto">
+		<result property="id" column="ci_tipo_receita" />
+		<result property="codigo" column="cd_tipo_receita" />
+		<result property="descricao" column="ds_tipo_receita" />
+		<result property="natureza" column="ds_natureza_tipo_receita" />
+		<result property="situacao" column="ds_situacao_tipo_receita" />
+		<result property="dataCriacao" column="dt_criacao" />
+		
+		<collection property="origemDebitos" ofType="br.gov.ce.pge.gestao.dto.response.OrigemDebitoConsultaResponseDto">
+       		 <result property="id" column="cd_origem_debito" />
+    	</collection>
+
+	</resultMap>
+
+	<select id="findTipoReceitasByFilter" resultMap="resultTipoReceitaFilter">
+		
+		SELECT DISTINCT r.ci_tipo_receita, r.cd_tipo_receita, r.ds_tipo_receita, r.ds_natureza_tipo_receita, r.ds_situacao_tipo_receita, r.dt_criacao, tp.cd_origem_debito 
+		FROM tb_tipo_receita r
+		LEFT JOIN tb_tipo_receita_origem tp ON r.ci_tipo_receita = tp.cd_tipo_receita
+		LEFT JOIN tb_origem_debito d ON d.ci_origem_debito = tp.cd_origem_debito
+		
+		<where>
+			
+	        <if test="codigo != null">
+	            AND r.cd_tipo_receita = #{codigo}
+	        </if>
+	        
+	        <if test="descricao != null">
+	            AND upper(r.ds_tipo_receita) like #{descricao}
+	        </if>
+	        
+	        <if test="situacao != null">
+	            AND r.ds_situacao_tipo_receita = #{situacao}
+	        </if>
+	        
+	        <if test="natureza != null">
+	            AND r.ds_natureza_tipo_receita = #{natureza}
+	        </if>
+	        
+	        <if test="idsOrigem != null and idsOrigem.size() > 0">
+	            AND tp.cd_origem_debito::VARCHAR IN
+	            <foreach item="item" index="index" collection="idsOrigem" open="(" separator="," close=")">
+	                #{item}
+	            </foreach>
+       		</if>
+       		
+   		 </where>
+   		 
+   		 order by r.cd_tipo_receita
+
+	</select>
+
+</mapper>

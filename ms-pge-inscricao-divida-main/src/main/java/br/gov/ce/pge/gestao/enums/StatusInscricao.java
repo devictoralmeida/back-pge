@@ -1,0 +1,15 @@
+package br.gov.ce.pge.gestao.enums;
+
+public enum StatusInscricao {
+	
+	PENDENTE_INSCRICAO, 
+	PENDENTE_PROCURADOR,
+	EM_ANALISE,
+	PENDENTE_DILIGENCIA,
+	DEFERIDO,
+	INDEFERIDO,
+	INSCRITO,
+	DIVIDA_ATIVA,
+	INCOMPLETO;
+
+}
