@@ -1,99 +1,125 @@
 package br.gov.ce.pge.gestao.dto.response;
 
+import org.springframework.http.HttpStatus;
+
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-
 public class ResponseDto<T> implements Serializable {
 
-    private static final long serialVersionUID = 920693103078426185L;
+  private static final long serialVersionUID = 920693103078426185L;
 
-    private transient T data;
-    private List<String> errors = new ArrayList<>();
-    private List<String> warns = new ArrayList<>();
-    private List<String> infos = new ArrayList<>();
-    private String mensagem;
-    private URI uri;
-    private Integer status;
+  private transient T data;
+  private List<String> errors = new ArrayList<>();
+  private List<String> warns = new ArrayList<>();
+  private List<String> infos = new ArrayList<>();
+  private String mensagem;
+  private URI uri;
+  private Integer status;
 
-    private ResponseDto() {}
+  public ResponseDto() {
+  }
 
-    public static <T> ResponseDto<T> fromData(T data, HttpStatus status, String mensagem) {
-        return new ResponseDto<T>()
-                .setData(data)
-                .setStatus(status)
-                .setMensagem(mensagem);
-    }
-    
-    public static <T> ResponseDto<T> fromData(T data, Integer status, String mensagem) {
-        return new ResponseDto<T>()
-                .setData(data)
-                .setStatus(status)
-                .setMensagem(mensagem);
-    }
+  public static <T> ResponseDto<T> fromData(T data, HttpStatus status, String mensagem) {
+    return new ResponseDto<T>()
+            .setData(data)
+            .setStatus(status)
+            .setMensagem(mensagem);
+  }
 
-    public static <T> ResponseDto<T> fromData(T data, HttpStatus status, String mensagem, List<String> errors) {
-        return new ResponseDto<T>()
-                .setData(data)
-                .setStatus(status)
-                .setMensagem(mensagem)
-                .setErrors(errors);
-    }
+  public static <T> ResponseDto<T> fromData(T data, HttpStatus status, String mensagem, URI uri) {
+    return new ResponseDto<T>()
+            .setData(data)
+            .setStatus(status)
+            .setMensagem(mensagem)
+            .setUri(uri);
+  }
 
-    public String getMensagem(){
-        return this.mensagem;
-    }
+  public static <T> ResponseDto<T> fromData(T data, HttpStatus status, String mensagem, List<String> errors) {
+    return new ResponseDto<T>()
+            .setData(data)
+            .setStatus(status)
+            .setMensagem(mensagem)
+            .setErrors(errors);
+  }
 
-    public ResponseDto<T> setMensagem(String mensagem){
-        this.mensagem = mensagem;
-        return this;
-    }
+  public String getMensagem() {
+    return this.mensagem;
+  }
 
-    public T getData() {
-        return data;
-    }
+  public ResponseDto<T> setMensagem(String mensagem) {
+    this.mensagem = mensagem;
+    return this;
+  }
 
-    public ResponseDto<T> setData(T data) {
-        this.data = data;
-        return this;
-    }
+  public T getData() {
+    return this.data;
+  }
 
-    public Integer getStatus() {
-        return status;
-    }
+  public ResponseDto<T> setData(T data) {
+    this.data = data;
+    return this;
+  }
 
-    public ResponseDto<T> setStatus(HttpStatus status) {
-        this.status = status.value();
-        return this;
-    }
-    
-    public ResponseDto<T> setStatus(Integer status) {
-        this.status = status;
-        return this;
-    }
+  public Integer getStatus() {
+    return this.status;
+  }
 
-    public URI getUri() {
-        return uri;
-    }
+  public ResponseDto<T> setStatus(HttpStatus status) {
+    this.status = status.value();
+    return this;
+  }
 
-    public List<String> getErrors() {
-        return errors;
-    }
+  public URI getUri() {
+    return this.uri;
+  }
 
-    public ResponseDto<T> setErrors(List<String> errors) {
-        this.errors = errors;
-        return this;
-    }
+  public ResponseDto<T> setUri(URI uri) {
+    this.uri = uri;
+    return this;
+  }
 
-    public List<String> getWarns() {
-        return warns;
-    }
+  public List<String> getErrors() {
+    return this.errors;
+  }
 
-    public List<String> getInfos() {
-        return infos;
-    }
+  public ResponseDto<T> setErrors(List<String> errors) {
+    this.errors = errors;
+    return this;
+  }
 
+  public ResponseDto<T> addError(String error) {
+    this.errors.add(error);
+    return this;
+  }
+
+  public List<String> getWarns() {
+    return this.warns;
+  }
+
+  public ResponseDto<T> setWarns(List<String> warns) {
+    this.warns = warns;
+    return this;
+  }
+
+  public ResponseDto<T> addWarn(String warn) {
+    this.warns.add(warn);
+    return this;
+  }
+
+  public List<String> getInfos() {
+    return this.infos;
+  }
+
+  public ResponseDto<T> setInfos(List<String> infos) {
+    this.infos = infos;
+    return this;
+  }
+
+  public ResponseDto<T> addInfo(String info) {
+    this.infos.add(info);
+    return this;
+  }
 }

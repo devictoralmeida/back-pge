@@ -1,89 +1,103 @@
 package br.gov.ce.pge.gestao.dto.request;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.UUID;
+import br.gov.ce.pge.gestao.enums.TipoDocumento;
+import br.gov.ce.pge.gestao.enums.TipoProcesso;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import br.gov.ce.pge.gestao.enums.TipoDocumento;
-import br.gov.ce.pge.gestao.enums.TipoProcesso;
-import lombok.Getter;
-import lombok.Setter;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class DividaRequestDto implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	private UUID id;
+    private static final long serialVersionUID = 1L;
 
-	@NotNull(message = "Favor informar o Tipo Receita.")
-	private UUID idTipoReceita;
+    private UUID id;
 
-	@NotNull(message = "Favor informar a Origem Débito.")
-	private UUID idOrigemDebito;
+    @NotNull(message = "Favor informar o Tipo Receita.")
+    private UUID idTipoReceita;
 
-	@NotBlank(message = "Favor informar as Disposições Legais")
-	@Size(max = 500, message = "Disposições Legais deve conter no máximo {max} caracteres.")
-	private String disposicoesLegais;
+    @NotNull(message = "Favor informar a Origem Débito.")
+    private UUID idOrigemDebito;
 
-	@Size(max = 500, message = "A Natureza e Fundamentação Legal do Débito deve conter no máximo {max} caracteres.")
-	private String naturezaFundamentacao;
+    @NotBlank(message = "Favor informar as Disposições Legais")
+    @Size(max = 500, message = "Disposições Legais deve conter no máximo {max} caracteres.")
+    private String disposicoesLegais;
 
-	@Size(max = 500, message = "A Inexistência de Causas Extintivas ou Suspensivas da Exigibilidade deve conter no máximo {max} caracteres.")
-	private String inexistenciaCausaSuspensivas;
+    @Size(max = 500, message = "A Natureza e Fundamentação Legal do Débito deve conter no máximo {max} caracteres.")
+    private String naturezaFundamentacao;
 
-	private TipoDocumento tipoDocumento;
+    @Size(max = 500, message = "A Inexistência de Causas Extintivas ou Suspensivas da Exigibilidade deve conter no máximo {max} caracteres.")
+    private String inexistenciaCausaSuspensivas;
 
-	@Size(max = 10, message = "O número do documento deve conter no máximo {max} caracteres.")
-	private String numeroDocumento;
+    private TipoDocumento tipoDocumento;
 
-	@Column(name = "dt_documento")
-	private LocalDate dataDocumento;
+    @Size(max = 10, message = "O número do documento deve conter no máximo {max} caracteres.")
+    private String numeroDocumento;
 
-	@Size(max = 9, message = "O termo de revelia deve conter no máximo {max} caracteres.")
-	private String termoRevelia;
+    @Column(name = "dt_documento")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate dataDocumento;
 
-	private LocalDate dataTermoRevelia;
+    @Size(max = 9, message = "O termo de revelia deve conter no máximo {max} caracteres.")
+    private String termoRevelia;
 
-	private LocalDate dataTransitoJulgado;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate dataTermoRevelia;
 
-	private LocalDate dataConstituicaoDefinitivaCredito;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate dataTransitoJulgado;
 
-	@Size(min = 7, max = 7, message = "A placa deve conter {max} caracteres")
-	private String placaVeiculo;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate dataConstituicaoDefinitivaCredito;
 
-	@Size(min = 17, max = 17, message = "O número do chassi deve conter {max} caracteres")
-	private String numeroChassi;
+    @Size(min = 7, max = 7, message = "A placa deve conter {max} caracteres")
+    private String placaVeiculo;
 
-	private String guiaItcd;
+    @Size(min = 17, max = 17, message = "O número do chassi deve conter {max} caracteres")
+    private String numeroChassi;
 
-	@Size(min = 4, max = 12, message = "O Sequencial de parcelamento deve conter entre {min} e {max} caracteres")
-	private String sequencialParcelamento;
+    private String guiaItcd;
 
-	private String protocoloJudicial;
+    @Size(min = 4, max = 12, message = "O Sequencial de parcelamento deve conter entre {min} e {max} caracteres")
+    private String sequencialParcelamento;
 
-	@Size(max = 10, message = "O número do ofício deve conter no máximo {max} caracteres.")
-	private String numeroOficio;
+    private String protocoloJudicial;
 
-	@NotNull(message = "Favor informar o tipo do processo.")
-	private TipoProcesso tipoProcesso;
+    @Size(max = 10, message = "O número do ofício deve conter no máximo {max} caracteres.")
+    private String numeroOficio;
 
-	@NotBlank(message = "Favor informar o Número do Processo Administrativo.")
-	private String numeroProcessoAdministrativo;
+    @NotNull(message = "Favor informar o tipo do processo.")
+    private TipoProcesso tipoProcesso;
 
-	@NotNull(message = "Favor informar o tipo do processo.")
-	private LocalDate dataProcesso;
+    @NotBlank(message = "Favor informar o Número do Processo Administrativo.")
+    private String numeroProcessoAdministrativo;
 
-	private String numeroAcordao;
+    @NotNull(message = "Favor informar o tipo do processo.")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate dataProcesso;
 
-	private String nomeAnexoProcessoDigitalizado;
-	
-	private byte[] arquivo;
+    private String numeroAcordao;
+
+    private String nomeAnexoProcessoDigitalizado;
+
+    private byte[] arquivo;
+
 
 }

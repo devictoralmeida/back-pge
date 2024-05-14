@@ -40,7 +40,7 @@ spec:
             - name: GESTAO_SERVICE
               value: "http://ms-gestao-atributos-divida-service.homol.svc.cluster.local:8502"
 
-            - name: GOOGLE_APPLICATION_CREDENTIALS
+            - name: BUCKET_GOOGLE_CLOUD_CREDENTIALS
               value: "/opt/google/credentials.json"
 
             - name: FILE_SERVICE

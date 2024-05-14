@@ -40,14 +40,14 @@ spec:
             - name: GESTAO_SERVICE
               value: "http://ms-gestao-atributos-divida-service.dev.svc.cluster.local:8502"
 
-            - name: GOOGLE_APPLICATION_CREDENTIALS
+            - name: BUCKET_GOOGLE_CLOUD_CREDENTIALS
               value: "/opt/google/credentials.json"
 
             - name: FILE_SERVICE
               value: "FileServiceGCP"
 
             - name: PATH_BUCKET_PGE
-              value: "gs://bucket_inscricao_divida"      
+              value: "bucket_inscricao_divida"      
           ports:
             - containerPort: 8508
 ---

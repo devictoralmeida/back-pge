@@ -1,10 +1,5 @@
 package br.gov.ce.pge.gestao.shared.auditoria;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-
-import javax.persistence.EntityManager;
-
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,36 +9,39 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith({ MockitoExtension.class })
+import javax.persistence.EntityManager;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+
+@ExtendWith({MockitoExtension.class})
 public class CustomRevisionListenerTest {
 
-    @Mock
-    private EntityManager entityManager;
+  @Mock
+  private EntityManager entityManager;
 
-    @InjectMocks
-    private CustomRevisionListener customRevisionListener;
+  @InjectMocks
+  private CustomRevisionListener customRevisionListener;
 
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
+  @BeforeEach
+  public void setup() {
+    MockitoAnnotations.openMocks(this);
+  }
 
-    @Test
-    public void newRevision_shouldSetPropertiesOnAuditoria() {
-        // Arrange
-        DefaultRevisionEntity revisionEntity = new DefaultRevisionEntity();
-        revisionEntity.setId(1);
+  @Test
+  public void teste_dados_auditoria() {
 
-        Auditoria auditoria = new Auditoria();
-        CustomRevisionListener.setDadosAntigos("Dados Antigos");
-        assertEquals("Dados Antigos", CustomRevisionListener.getDadosAntigos());
+    DefaultRevisionEntity revisionEntity = new DefaultRevisionEntity();
+    revisionEntity.setId(1);
 
-        // Act
-        customRevisionListener.newRevision(auditoria);
+    Auditoria auditoria = new Auditoria();
+    CustomRevisionListener.setDadosAntigos("Dados Antigos");
+    assertEquals("Dados Antigos", CustomRevisionListener.getDadosAntigos());
 
-        // Assert
-        verify(entityManager).flush();
-        assertEquals("anônimo", auditoria.getNomeUsuario());
-        assertEquals("Dados Antigos", auditoria.getDadosAntigos());
-    }
+    this.customRevisionListener.newRevision(auditoria);
+
+    verify(this.entityManager).flush();
+    assertEquals("anônimo", auditoria.getNomeUsuario());
+    assertEquals("Dados Antigos", auditoria.getDadosAntigos());
+  }
 }

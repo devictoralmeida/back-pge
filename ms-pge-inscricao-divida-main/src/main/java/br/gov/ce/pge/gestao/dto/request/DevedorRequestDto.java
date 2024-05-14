@@ -1,63 +1,62 @@
 package br.gov.ce.pge.gestao.dto.request;
 
-import java.io.Serializable;
-import java.util.UUID;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import br.gov.ce.pge.gestao.enums.TipoContato;
 import br.gov.ce.pge.gestao.enums.TipoPessoa;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.UUID;
+
 @Getter
 @Setter
 public class DevedorRequestDto implements Serializable {
 
-	private static final long serialVersionUID = -5176385379374791879L;
-	
-	private UUID id;
+  private static final long serialVersionUID = -5176385379374791879L;
 
-	@NotNull(message = "Favor informar o Tipo Pessoa.")
-	private TipoPessoa tipoPessoa;
+  private UUID id;
 
-	@Size(min = 11, max = 14, message = "O documento deve contér {min} ou {max} caracteres.")
-	@NotBlank(message = "Favor informar o Documento.")
-	private String documento;
+  @NotNull(message = "Favor informar o Tipo Pessoa.")
+  private TipoPessoa tipoPessoa;
 
-	@NotBlank(message = "Favor informar o nome ou razão social.")
-	private String nomeRazaoSocial;
+  @Size(min = 11, max = 14, message = "O documento deve conter {min} ou {max} caracteres.")
+  @NotBlank(message = "Favor informar o Documento.")
+  private String documento;
 
-	private String cgf;
+  @NotBlank(message = "Favor informar o nome ou razão social.")
+  private String nomeRazaoSocial;
 
-	private TipoContato tipoContato;
+  private String cgf;
 
-	private String contato;
+  private TipoContato tipoContato;
 
-	private String email;
+  private String contato;
 
-	@NotBlank(message = "Favor informar o Cep.")
-	private String cep;
+  private String email;
 
-	@NotBlank(message = "Favor informar o Logradouro.")
-	private String logradouro;
+  @NotBlank(message = "Favor informar o Cep.")
+  private String cep;
 
-	@NotBlank(message = "Favor informar o Número.")
-	private String numero;
+  @NotBlank(message = "Favor informar o Logradouro.")
+  private String logradouro;
 
-	@NotBlank(message = "Favor informar o Bairro.")
-	private String bairro;
+  @NotBlank(message = "Favor informar o Número.")
+  private String numero;
 
-	private String complemento;
+  @NotBlank(message = "Favor informar o Bairro.")
+  private String bairro;
 
-	private String distrito;
+  private String complemento;
 
-	@NotBlank(message = "Favor informar o Municípo.")
-	private String municipio;
+  private String distrito;
 
-	@NotBlank(message = "Favor informar o UF.")
-	private String uf;
+  @NotBlank(message = "Favor informar o Municípo.")
+  private String municipio;
+
+  @NotBlank(message = "Favor informar o UF.")
+  private String uf;
 
 }

@@ -1,101 +1,100 @@
 package br.gov.ce.pge.gestao.dto.response;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-import java.math.BigDecimal;
-
+import br.gov.ce.pge.gestao.enums.StatusInscricao;
 import org.junit.jupiter.api.Test;
 
-import br.gov.ce.pge.gestao.enums.StatusInscricao;
+import java.math.BigDecimal;
+import java.util.UUID;
 
-class InscricaoResponseDtoTest {
+import static org.junit.jupiter.api.Assertions.*;
 
-	public static InscricaoResponseDto getIncricaoSomenteComDevedor() {
-		var dto = new InscricaoResponseDto();
-		dto.setDevedor(DevedorResponseDtoTest.getDevedorPessoaFisica());
+public class InscricaoResponseDtoTest {
 
-		return dto;
-	}
+  public static InscricaoResponseDto getIncricaoSomenteComDevedor() {
+    var dto = new InscricaoResponseDto();
+    dto.setDevedor(DevedorResponseDtoTest.get_devedor_pessoa_fisica());
 
-	public static InscricaoResponseDto getIncricaoComDevedorDivida() {
-		var dto = new InscricaoResponseDto();
-		dto.setDevedor(DevedorResponseDtoTest.getDevedorPessoaFisica());
-		dto.setDivida(DividaResponseDtoTest.getDivida());
+    return dto;
+  }
 
-		return dto;
-	}
+  public static InscricaoResponseDto getIncricaoComDevedorDivida() {
+    var dto = new InscricaoResponseDto();
+    dto.setDevedor(DevedorResponseDtoTest.get_devedor_pessoa_fisica());
+    dto.setDivida(DividaResponseDtoTest.get_divida());
 
-	public static InscricaoResponseDto getIncricaoComDevedorDividaStatus() {
-		var dto = new InscricaoResponseDto();
-		dto.setDevedor(DevedorResponseDtoTest.getDevedorPessoaFisica());
-		dto.setDivida(DividaResponseDtoTest.getDivida());
-		dto.setStatus(StatusInscricao.EM_ANALISE);
+    return dto;
+  }
 
-		return dto;
-	}
+  public static InscricaoResponseDto getIncricaoComDevedorDividaStatus() {
+    var dto = new InscricaoResponseDto();
+    dto.setDevedor(DevedorResponseDtoTest.get_devedor_pessoa_fisica());
+    dto.setDivida(DividaResponseDtoTest.get_divida());
+    dto.setStatus(StatusInscricao.EM_ANALISE);
 
-	public static InscricaoResponseDto getIncricaoComDevedorDividaStatusCorresponsaveis() {
-		var dto = new InscricaoResponseDto();
-		dto.setDevedor(DevedorResponseDtoTest.getDevedorPessoaFisica());
-		dto.setDivida(DividaResponseDtoTest.getDivida());
-		dto.setStatus(StatusInscricao.EM_ANALISE);
-		dto.setCorresponsaveis(CorresponsavelResponseDtoTest.getListCorresponsaveis());
-		return dto;
-	}
+    return dto;
+  }
 
-	public static InscricaoResponseDto getIncricaoCompleta() {
-		var dto = new InscricaoResponseDto();
-		dto.setDevedor(DevedorResponseDtoTest.getDevedorPessoaFisica());
-		dto.setDivida(DividaResponseDtoTest.getDivida());
-		dto.setStatus(StatusInscricao.EM_ANALISE);
-		dto.setCorresponsaveis(CorresponsavelResponseDtoTest.getListCorresponsaveis());
-		dto.setDebitos(DebitoResponseDtoTest.getDebitos());
-		return dto;
-	}
+  public static InscricaoResponseDto getIncricaoComDevedorDividaStatusCorresponsaveis() {
+    var dto = new InscricaoResponseDto();
+    dto.setDevedor(DevedorResponseDtoTest.get_devedor_pessoa_fisica());
+    dto.setDivida(DividaResponseDtoTest.get_divida());
+    dto.setStatus(StatusInscricao.EM_ANALISE);
+    dto.setCorresponsaveis(CorresponsavelResponseDtoTest.getListCorresponsaveis());
+    return dto;
+  }
 
-	@Test
-	void teste_inscricao_incompleto() {
-		var dto = getIncricaoSomenteComDevedor();
+  public static InscricaoResponseDto getIncricaoCompleta() {
+    var dto = new InscricaoResponseDto();
+    dto.setId(UUID.fromString("c8bf3eff-2d65-46f7-bb6a-8f4c93be7886"));
+    dto.setDevedor(DevedorResponseDtoTest.get_devedor_pessoa_fisica());
+    dto.setDivida(DividaResponseDtoTest.get_divida());
+    dto.setStatus(StatusInscricao.EM_ANALISE);
+    dto.setCorresponsaveis(CorresponsavelResponseDtoTest.getListCorresponsaveis());
+    dto.setDebitos(DebitoResponseDtoTest.getDebitos());
+    return dto;
+  }
 
-		assertNotNull(dto.getDevedor());
-		assertNull(dto.getDivida());
-		assertNull(dto.getStatus());
+  @Test
+  void teste_inscricao_incompleto() {
+    var dto = getIncricaoSomenteComDevedor();
 
-		dto = getIncricaoComDevedorDivida();
+    assertNotNull(dto.getDevedor());
+    assertNull(dto.getDivida());
+    assertNull(dto.getStatus());
 
-		assertNotNull(dto.getDevedor());
-		assertNotNull(dto.getDivida());
-		assertEquals(null, dto.getStatus());
+    dto = getIncricaoComDevedorDivida();
 
-		dto = getIncricaoComDevedorDividaStatus();
+    assertNotNull(dto.getDevedor());
+    assertNotNull(dto.getDivida());
+    assertEquals(null, dto.getStatus());
 
-		assertNotNull(dto.getDevedor());
-		assertNotNull(dto.getDivida());
-		assertEquals(StatusInscricao.EM_ANALISE, dto.getStatus());
+    dto = getIncricaoComDevedorDividaStatus();
 
-		dto = getIncricaoComDevedorDividaStatusCorresponsaveis();
+    assertNotNull(dto.getDevedor());
+    assertNotNull(dto.getDivida());
+    assertEquals(StatusInscricao.EM_ANALISE, dto.getStatus());
 
-		assertNotNull(dto.getDevedor());
-		assertNotNull(dto.getDivida());
-		assertEquals(StatusInscricao.EM_ANALISE, dto.getStatus());
-		assertNotNull(dto.getCorresponsaveis());
-		assertEquals(2, dto.getCorresponsaveis().size());
-		assertEquals("Kamila Lima", dto.getCorresponsaveis().get(0).getNomeRazaoSocial());
-		assertEquals("Osvaldo e Julio Marketing ME", dto.getCorresponsaveis().get(1).getNomeRazaoSocial());
+    dto = getIncricaoComDevedorDividaStatusCorresponsaveis();
 
-		dto = getIncricaoCompleta();
+    assertNotNull(dto.getDevedor());
+    assertNotNull(dto.getDivida());
+    assertEquals(StatusInscricao.EM_ANALISE, dto.getStatus());
+    assertNotNull(dto.getCorresponsaveis());
+    assertEquals(2, dto.getCorresponsaveis().size());
+    assertEquals("Kamila Lima", dto.getCorresponsaveis().get(0).getNomeRazaoSocial());
+    assertEquals("Osvaldo e Julio Marketing ME", dto.getCorresponsaveis().get(1).getNomeRazaoSocial());
 
-		assertNotNull(dto.getDevedor());
-		assertNotNull(dto.getDivida());
-		assertEquals(StatusInscricao.EM_ANALISE, dto.getStatus());
-		assertNotNull(dto.getCorresponsaveis());
-		assertEquals(2, dto.getCorresponsaveis().size());
-		assertEquals("Kamila Lima", dto.getCorresponsaveis().get(0).getNomeRazaoSocial());
-		assertEquals("Osvaldo e Julio Marketing ME", dto.getCorresponsaveis().get(1).getNomeRazaoSocial());
-		assertEquals(BigDecimal.valueOf(150), dto.getDebitos().get(0).getValorPrincipal());
-		assertEquals(BigDecimal.valueOf(50), dto.getDebitos().get(0).getValorMulta());
-	}
+    dto = getIncricaoCompleta();
+
+    assertNotNull(dto.getDevedor());
+    assertNotNull(dto.getDivida());
+    assertEquals(StatusInscricao.EM_ANALISE, dto.getStatus());
+    assertNotNull(dto.getCorresponsaveis());
+    assertEquals(2, dto.getCorresponsaveis().size());
+    assertEquals("Kamila Lima", dto.getCorresponsaveis().get(0).getNomeRazaoSocial());
+    assertEquals("Osvaldo e Julio Marketing ME", dto.getCorresponsaveis().get(1).getNomeRazaoSocial());
+    assertEquals(BigDecimal.valueOf(150), dto.getDebitos().get(0).getValorPrincipal());
+    assertEquals(BigDecimal.valueOf(50), dto.getDebitos().get(0).getValorMulta());
+  }
 
 }

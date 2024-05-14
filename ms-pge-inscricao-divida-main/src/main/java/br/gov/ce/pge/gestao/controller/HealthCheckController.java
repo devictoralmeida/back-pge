@@ -12,6 +12,6 @@ public class HealthCheckController {
 
     @GetMapping()
     public ResponseEntity<?> healthCheck() {
-        return ResponseEntity.status(HttpStatus.OK).body("OK! - v0.0.0");
+        return ResponseEntity.status(HttpStatus.OK).body("OK! - v0.0.3");
     }
 }

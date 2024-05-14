@@ -1,0 +1,55 @@
+server:
+  port: 8765
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER}
+      
+      
+ms:
+  service:
+    oauth: ${OAUTH_SERVICE}
+    user: ${USER_SERVICE}
+    gestao: ${GESTAO_SERVICE}
+    inscricao: ${INSCRICAO_SERVICE}     
+
+spring:
+  application:
+    name: ms-api-gateway
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - PATCH
+              - OPTIONS
+        globalCorsConfig: 
+          allowCredentials: true
+          allowedOrigins: "*"
+          allowedHeaders: "*"
+          allowedMethods: 
+            - GET
+            - POST
+            - DELETE
+            - PUT
+            - PATCH
+            - OPTIONS
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      
+api:
+  secutiry:
+    token:
+      secret: ${JWT_SECRET}

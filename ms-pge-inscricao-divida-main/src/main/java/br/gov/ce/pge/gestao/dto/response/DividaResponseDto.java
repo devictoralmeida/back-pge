@@ -62,5 +62,7 @@ public class DividaResponseDto implements Serializable {
 	private String numeroAcordao;
 
 	private String nomeAnexoProcessoDigitalizado;
+	
+	private String arquivo;
 
 }
