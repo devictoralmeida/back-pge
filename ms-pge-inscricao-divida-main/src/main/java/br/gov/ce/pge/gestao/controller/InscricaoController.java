@@ -20,20 +20,20 @@ public class InscricaoController {
 
     @PostMapping(value = "/")
     public ResponseEntity<ResponseDto<?>> save(@RequestBody @Valid InscricaoRequestDto request) {
-        this.service.save(request);
+        service.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.fromData(null,
                 HttpStatus.CREATED, MessageCommonsContanst.MENSAGEM_SAVE_SUCESSO));
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ResponseDto<?>> findById(@PathVariable(value = "id") UUID id) {
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.fromData(this.service.findById(id),
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.fromData(service.findById(id),
                 HttpStatus.OK, MessageCommonsContanst.MENSAGEM_CONSULTA_ID_SUCESSO));
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<ResponseDto<?>> update(@PathVariable(value = "id") UUID id, @RequestBody @Valid InscricaoRequestDto request) {
-        this.service.update(id, request);
+        service.update(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.fromData(null,
                 HttpStatus.OK, MessageCommonsContanst.MENSAGEM_UPDATE_SUCESSO));
     }

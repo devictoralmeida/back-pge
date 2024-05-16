@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -30,7 +29,7 @@ public class LivroEletronicoFilterRequestDto implements Serializable {
   @Size(max = 14, min = 14, message = "O campo cnpj deve conter {max} caracteres")
   private String cnpj;
 
-  private UUID numeroInscricao;
+  private String numeroInscricao;
 
   @Size(max = 250, message = "O campo nome ou razão social deve conter no máximo {max} caracteres")
   private String nomeRazaoSocial;
@@ -44,16 +43,16 @@ public class LivroEletronicoFilterRequestDto implements Serializable {
 
   public Map<String, Object> filters() {
     Map<String, Object> filter = new HashMap<>();
-    filter.put("nome", this.nome == null ? null : this.nome);
-    filter.put("cgf", this.cgf == null ? null : this.cgf);
-    filter.put("cpf", this.cpf == null ? null : this.cpf);
-    filter.put("cnpj", this.cnpj == null ? null : this.cnpj);
-    filter.put("numeroInscricao", this.numeroInscricao == null ? null : this.numeroInscricao);
-    filter.put("nomeRazaoSocial", this.nomeRazaoSocial == null || this.nomeRazaoSocial.isEmpty() ? null : "%" + this.nomeRazaoSocial.toUpperCase() + "%");
-    filter.put("livros", this.livros == null || this.livros.isEmpty() ? null : this.livros);
-    filter.put("situacao", this.situacao == null ? null : this.situacao);
-    filter.put("dataAbertura", this.dataAbertura == null ? null : this.dataAbertura);
-    filter.put("dataFechamento", this.dataFechamento == null ? null : this.dataFechamento);
+    filter.put("nome", nome == null ? null : nome);
+    filter.put("cgf", cgf == null ? null : cgf);
+    filter.put("cpf", cpf == null ? null : cpf);
+    filter.put("cnpj", cnpj == null ? null : cnpj);
+    filter.put("numeroInscricao", numeroInscricao == null ? null : numeroInscricao);
+    filter.put("nomeRazaoSocial", nomeRazaoSocial == null || nomeRazaoSocial.isEmpty() ? null : "%" + nomeRazaoSocial.toUpperCase() + "%");
+    filter.put("livros", livros == null || livros.isEmpty() ? null : livros);
+    filter.put("situacao", situacao == null ? null : situacao);
+    filter.put("dataAbertura", dataAbertura == null ? null : dataAbertura);
+    filter.put("dataFechamento", dataFechamento == null ? null : dataFechamento);
     return filter;
   }
 }

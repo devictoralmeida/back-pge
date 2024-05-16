@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class LivroEletronicoMapperToDtoTest {
 
   @Test
-  void testConverter() {
+  void test_converter() {
     LivroEletronico livroEletronico = new LivroEletronico();
     livroEletronico.setId(UUID.randomUUID());
     livroEletronico.setNome("Livro Exemplo");
@@ -36,6 +36,16 @@ class LivroEletronicoMapperToDtoTest {
 
     LivroEletronicoResponseDto dto = LivroEletronicoMapperToDto.converter(livroEletronico);
 
+    asserts(livroEletronico, dto);
+
+    int quantidadeRegistros = livroEletronico.getRegistros().size();
+    int registrosPorPagina = 50;
+    Integer paginas = (int) Math.ceil((double) quantidadeRegistros / registrosPorPagina);
+
+    assertEquals(paginas, dto.getPaginas());
+  }
+
+  private void asserts(LivroEletronico livroEletronico, LivroEletronicoResponseDto dto) {
     assertNotNull(dto);
 
     assertEquals(livroEletronico.getId(), dto.getId());
@@ -43,11 +53,5 @@ class LivroEletronicoMapperToDtoTest {
     assertEquals(livroEletronico.getSituacao(), dto.getSituacao());
     assertEquals(livroEletronico.getDataAbertura(), dto.getDataAbertura());
     assertEquals(livroEletronico.getDataFechamento(), dto.getDataFechamento());
-
-    int quantidadeRegistros = livroEletronico.getRegistros().size();
-    int registrosPorPagina = 50;
-    Integer paginas = (int) Math.ceil((double) quantidadeRegistros / registrosPorPagina);
-
-    assertEquals(paginas, dto.getPaginas());
   }
 }

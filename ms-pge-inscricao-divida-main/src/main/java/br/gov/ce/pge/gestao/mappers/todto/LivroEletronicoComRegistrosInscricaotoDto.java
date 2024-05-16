@@ -36,7 +36,7 @@ public class LivroEletronicoComRegistrosInscricaotoDto {
 
   private static RegistroInscricaoResponseDto getRegistroInscricaoResponseDto(Object[] result) {
     RegistroInscricaoResponseDto registroDto = new RegistroInscricaoResponseDto();
-    registroDto.setNumeroInscricao((UUID) result[5]);
+    registroDto.setNumeroInscricao(result[5].toString());
     registroDto.setDocumento((String) result[6]);
     registroDto.setCgf((String) result[7]);
     registroDto.setNomeRazaoSocial((String) result[8]);

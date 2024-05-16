@@ -14,7 +14,7 @@
                 AND UPPER(d.nm_devedor) = #{nomeRazaoSocial} OR UPPER(c.nm_corresponsavel) = #{nomeRazaoSocial}
             </if>
             <if test="numeroInscricao != null">
-                AND i.ci_inscricao::uuid = #{numeroInscricao}
+                AND i.nr_inscricao = #{numeroInscricao}
             </if>
             <if test="cgf != null">
                 AND d.nr_cgf_devedor = #{cgf} OR c.nr_cgf_corresponsavel = #{cgf}

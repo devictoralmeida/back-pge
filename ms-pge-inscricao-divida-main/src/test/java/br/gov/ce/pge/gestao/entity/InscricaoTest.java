@@ -51,6 +51,7 @@ public class InscricaoTest {
         model.setStatus(StatusInscricao.EM_ANALISE);
         model.setCorresponsaveis(CorresponsavelTest.get_list_corresponsaveis());
         model.setDebitos(DebitoTest.get_debitos_list());
+        model.setNumeroInscricao("2024000000017");
         return model;
     }
 

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ResponseClientDtoTest {
   @Test
-  void testConstructorAndGettersSetters() {
+  void test_constructor_and_getters_setters() {
     Integer status = 200;
     String mensagem = "OK";
     URI uri = URI.create("http://example.com");
@@ -25,6 +25,10 @@ class ResponseClientDtoTest {
             .setWarns(warns)
             .setInfos(infos);
 
+    asserts(status, mensagem, uri, errors, warns, infos, data, dto);
+  }
+
+  private void asserts(Integer status, String mensagem, URI uri, List<String> errors, List<String> warns, List<String> infos, String data, ResponseClientDto<String> dto) {
     assertEquals(data, dto.getData());
     assertEquals(status, dto.getStatus());
     assertEquals(mensagem, dto.getMensagem());
@@ -35,7 +39,7 @@ class ResponseClientDtoTest {
   }
 
   @Test
-  void testAddError() {
+  void test_add_error() {
     ResponseClientDto<String> dto = ResponseClientDto.fromData("Some data", 200, "OK");
 
     dto.addError("error1");
@@ -49,7 +53,7 @@ class ResponseClientDtoTest {
   }
 
   @Test
-  void testAddWarn() {
+  void test_add_warn() {
     ResponseClientDto<String> dto = ResponseClientDto.fromData("Some data", 200, "OK");
 
     dto.addWarn("warn1");
@@ -63,7 +67,7 @@ class ResponseClientDtoTest {
   }
 
   @Test
-  void testAddInfo() {
+  void test_add_info() {
     ResponseClientDto<String> dto = ResponseClientDto.fromData("Some data", 200, "OK");
 
     dto.addInfo("info1");

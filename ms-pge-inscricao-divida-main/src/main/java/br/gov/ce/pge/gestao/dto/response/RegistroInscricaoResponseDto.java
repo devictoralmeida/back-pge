@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class RegistroInscricaoResponseDto implements Serializable {
   private static final long serialVersionUID = 1L;
-  private UUID numeroInscricao;
+  private String numeroInscricao;
   private String documento;
   private String cgf;
   private String nomeRazaoSocial;
@@ -24,4 +24,6 @@ public class RegistroInscricaoResponseDto implements Serializable {
   private BigDecimal valorPrincipal;
   private String nomeUsuario;
   private LocalDateTime dataRegistro;
+  private Integer pagina;
+  private Integer linha;
 }

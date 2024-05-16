@@ -34,5 +34,11 @@ public class RegistroLivro extends AuditoriaUser {
 	@OneToOne
 	@JoinColumn(name = "cd_inscricao")
 	private Inscricao inscricao;
-	
+
+	@Column(name = "nr_pagina")
+	private Integer pagina;
+
+	@Column(name = "nr_linha")
+	private Integer linha;
+
 }

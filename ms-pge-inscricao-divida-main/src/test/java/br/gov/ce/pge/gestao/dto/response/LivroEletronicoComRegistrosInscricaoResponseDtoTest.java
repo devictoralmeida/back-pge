@@ -20,7 +20,7 @@ public class LivroEletronicoComRegistrosInscricaoResponseDtoTest {
     LocalDateTime dataFechamento = null;
 
     List<RegistroInscricaoResponseDto> registros = List.of(
-            new RegistroInscricaoResponseDto(UUID.randomUUID(), "documento", "cgf", "nome", "origemDebito", BigDecimal.ONE, "usuario", LocalDateTime.now())
+            new RegistroInscricaoResponseDto(UUID.randomUUID().toString(), "documento", "cgf", "nome", "origemDebito", BigDecimal.ONE, "usuario", LocalDateTime.now(), null, null)
     );
 
     dto.setId(id);
@@ -34,7 +34,7 @@ public class LivroEletronicoComRegistrosInscricaoResponseDtoTest {
   }
 
   @Test
-  void testGetterSetter() {
+  void test_getter_setter() {
     LivroEletronicoComRegistrosInscricaoResponseDto dto = new LivroEletronicoComRegistrosInscricaoResponseDto();
     UUID id = UUID.randomUUID();
     String nome = "Livro de Teste";
@@ -42,7 +42,7 @@ public class LivroEletronicoComRegistrosInscricaoResponseDtoTest {
     LocalDateTime dataAbertura = LocalDateTime.now();
     LocalDateTime dataFechamento = LocalDateTime.now();
     List<RegistroInscricaoResponseDto> registros = List.of(
-            new RegistroInscricaoResponseDto(UUID.randomUUID(), "documento", "cgf", "nome", "origemDebito", BigDecimal.ONE, "usuario", LocalDateTime.now())
+            new RegistroInscricaoResponseDto(UUID.randomUUID().toString(), "documento", "cgf", "nome", "origemDebito", BigDecimal.ONE, "usuario", LocalDateTime.now(), null, null)
     );
 
     dto.setId(id);
@@ -52,6 +52,10 @@ public class LivroEletronicoComRegistrosInscricaoResponseDtoTest {
     dto.setDataFechamento(dataFechamento);
     dto.setRegistros(registros);
 
+    asserts(dto, id, nome, situacao, dataAbertura, dataFechamento, registros);
+  }
+
+  private void asserts(LivroEletronicoComRegistrosInscricaoResponseDto dto, UUID id, String nome, SituacaoLivro situacao, LocalDateTime dataAbertura, LocalDateTime dataFechamento, List<RegistroInscricaoResponseDto> registros) {
     assertEquals(id, dto.getId());
     assertEquals(nome, dto.getNome());
     assertEquals(situacao, dto.getSituacao());

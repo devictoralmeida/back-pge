@@ -29,6 +29,8 @@ public class DividaMapperToModel {
         var divida = new Divida();
         BeanUtils.copyProperties(request, divida, "dataCriacao", "nomeUsuarioCadastro");
         divida.setTipoDocumento(getTipoDocumento(request));
+        divida.setNomeOrigemDebito(origemDebito.getNome());
+
         return divida;
     }
 

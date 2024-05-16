@@ -2,23 +2,30 @@ package br.gov.ce.pge.gestao.controller;
 
 import br.gov.ce.pge.gestao.constants.MessageCommonsContanst;
 import br.gov.ce.pge.gestao.dto.request.LivroEletronicoFilterRequestDto;
+import br.gov.ce.pge.gestao.dto.request.RegistroLivroFilterRequestDto;
+import br.gov.ce.pge.gestao.dto.response.LivroEletronicoResponseDto;
 import br.gov.ce.pge.gestao.dto.response.ResponseDto;
 import br.gov.ce.pge.gestao.service.LivroEletronicoService;
+import br.gov.ce.pge.gestao.service.RegistroLivroService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "livro-eletronico")
 public class LivroEletronicoController {
+
   private final LivroEletronicoService service;
 
-  public LivroEletronicoController(LivroEletronicoService service) {
+  private final RegistroLivroService registroService;
+
+  public LivroEletronicoController(LivroEletronicoService service, RegistroLivroService registroService) {
     this.service = service;
+    this.registroService = registroService;
   }
+
 
   @PostMapping(value = "/filtros")
   public ResponseEntity<?> findByFilter(@RequestBody LivroEletronicoFilterRequestDto request) {
@@ -26,4 +33,26 @@ public class LivroEletronicoController {
     String msg = livros.isEmpty() ? MessageCommonsContanst.MENSAGEM_CONSULTA_FILTRO_VAZIA : MessageCommonsContanst.MENSAGEM_CONSULTA_FILTRO_SUCESSO;
     return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.fromData(livros, HttpStatus.OK, msg));
   }
+
+  @GetMapping(value = "/{id}")
+  public ResponseEntity<?> findById(@PathVariable(name = "id") UUID id) {
+
+    LivroEletronicoResponseDto livro = service.findById(id);
+
+    return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.fromData(livro, HttpStatus.OK, MessageCommonsContanst.MENSAGEM_CONSULTA_ID_SUCESSO));
+  }
+
+  @PostMapping(value = "/filtros-registros")
+  public ResponseEntity<?> findByFilterRegisters(@RequestBody RegistroLivroFilterRequestDto request,
+                                                 @RequestParam(value = "pagina", required = false, defaultValue = "1") Integer page,
+                                                 @RequestParam(value = "limite", required = false, defaultValue = "5") Long limit,
+                                                 @RequestParam(value = "ordenacaoPor", required = false) String orderBy) {
+
+    var registros = this.registroService.findByFilterRegistroInscricao(request, page, limit, orderBy);
+
+    String msg = registros.getList().isEmpty() ? MessageCommonsContanst.MENSAGEM_CONSULTA_FILTRO_VAZIA : MessageCommonsContanst.MENSAGEM_CONSULTA_FILTRO_SUCESSO;
+
+    return ResponseEntity.status(HttpStatus.OK).body(ResponseDto.fromData(registros, HttpStatus.OK, msg));
+  }
+
 }

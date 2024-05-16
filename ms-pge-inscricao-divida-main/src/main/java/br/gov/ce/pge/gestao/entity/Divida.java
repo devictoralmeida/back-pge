@@ -28,6 +28,9 @@ public class Divida extends AuditoriaUser {
     @Column(name = "cd_origem_debito", nullable = false)
     private UUID idOrigemDebito;
 
+    @Column(name = "nm_origem_debito", nullable = false)
+    private String nomeOrigemDebito;
+
     @Column(name = "ds_disposicoes_legais", nullable = false, length = 500)
     private String disposicoesLegais;
 

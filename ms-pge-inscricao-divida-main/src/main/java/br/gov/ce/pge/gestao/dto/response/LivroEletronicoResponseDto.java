@@ -29,4 +29,6 @@ public class LivroEletronicoResponseDto implements Serializable {
   private LocalDateTime dataFechamento;
 
   private Integer paginas;
+
+  private Integer totalLinhasUltimaPagina;
 }

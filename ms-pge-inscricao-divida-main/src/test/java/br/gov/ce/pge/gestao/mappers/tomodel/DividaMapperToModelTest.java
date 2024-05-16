@@ -96,7 +96,7 @@ class DividaMapperToModelTest {
     }
 
     @Test
-    void test_Upload_file_update_file_not_changed() {
+    void test_upload_file_update_file_not_changed() {
         DividaRequestDto request = new DividaRequestDto();
         Divida divida = new Divida();
         divida.setNomeAnexoProcessoDigitalizado("file.txt");
@@ -109,7 +109,7 @@ class DividaMapperToModelTest {
     }
 
     @Test
-    void test_Upload_file_update_file_changed() {
+    void test_upload_file_update_file_changed() {
         DividaRequestDto request = new DividaRequestDto();
         request.setArquivo(new byte[10]);
         Divida divida = new Divida();

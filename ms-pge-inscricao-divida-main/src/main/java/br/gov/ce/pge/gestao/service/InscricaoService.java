@@ -18,4 +18,5 @@ public interface InscricaoService {
 
     InscricaoResponseDto findById(UUID id);
 
+    Inscricao getLast();
 }

@@ -29,7 +29,7 @@ class LivroEletronicoDaoTest {
   private transient SqlSession sqlSession;
 
   @Test
-  void testFindByFilter() {
+  void test_find_by_filter() {
     when(this.sqlSession.selectList(eq("LivroEletronicoDao.findByFilter"), anyMap())).thenReturn(List.of(LivroEletronicoFilterResponseDtoTest.getLivroEletronicoFilter()));
 
     LivroEletronicoFilterRequestDto requestFilter = LivroEletronicoFilterRequestDtoTest.getRequestFilter();

@@ -33,7 +33,7 @@ public class OrigemDebitoResponseDtoTest {
     }
 
     @Test
-    void testConstructorAndGettersSetters() {
+    void test_constructor_and_getters_setters() {
         UUID id = UUID.randomUUID();
         String nome = "Origem Teste";
         String descricao = "Descrição da origem";
@@ -49,6 +49,10 @@ public class OrigemDebitoResponseDtoTest {
         origem.setDataCriacao(dataCriacao);
         origem.setDataAtualizacao(dataAtualizacao);
 
+        asserts(id, nome, descricao, situacao, dataCriacao, dataAtualizacao, origem);
+    }
+
+    private void asserts(UUID id, String nome, String descricao, Situacao situacao, LocalDateTime dataCriacao, LocalDateTime dataAtualizacao, OrigemDebitoResponseDto origem) {
         Assertions.assertEquals(id, origem.getId());
         Assertions.assertEquals(nome, origem.getNome());
         Assertions.assertEquals(descricao, origem.getDescricao());
@@ -58,7 +62,7 @@ public class OrigemDebitoResponseDtoTest {
     }
 
     @Test
-    void testDefaultConstructor() {
+    void test_default_constructor() {
         OrigemDebitoResponseDto origem = new OrigemDebitoResponseDto();
 
         assertNotNull(origem);

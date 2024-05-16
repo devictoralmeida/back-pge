@@ -8,9 +8,24 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class RegistroInscricaoResponseDtoTest {
+public class RegistroInscricaoResponseDtoTest {
+
+  public static RegistroInscricaoResponseDto getRegistroInscricaoPagina() {
+    var registro = new RegistroInscricaoResponseDto();
+    registro.setPagina(1);
+
+    return registro;
+  }
+
+  public static RegistroInscricaoResponseDto getRegistroInscricaoLinha() {
+    var registro = new RegistroInscricaoResponseDto();
+    registro.setLinha(1);
+
+    return registro;
+  }
+
   @Test
-  void testGetterSetter() {
+  void test_getter_setter() {
     RegistroInscricaoResponseDto dto = new RegistroInscricaoResponseDto();
     UUID numeroInscricao = UUID.randomUUID();
     String documento = "12345678900";
@@ -21,7 +36,7 @@ class RegistroInscricaoResponseDtoTest {
     String nomeUsuario = "Usuário";
     LocalDateTime dataRegistro = LocalDateTime.now();
 
-    dto.setNumeroInscricao(numeroInscricao);
+    dto.setNumeroInscricao(numeroInscricao.toString());
     dto.setDocumento(documento);
     dto.setCgf(cgf);
     dto.setNomeRazaoSocial(nomeRazaoSocial);
@@ -30,7 +45,11 @@ class RegistroInscricaoResponseDtoTest {
     dto.setNomeUsuario(nomeUsuario);
     dto.setDataRegistro(dataRegistro);
 
-    assertEquals(numeroInscricao, dto.getNumeroInscricao());
+    asserts(dto, numeroInscricao, documento, cgf, nomeRazaoSocial, origemDebito, valorPrincipal, nomeUsuario, dataRegistro);
+  }
+
+  private void asserts(RegistroInscricaoResponseDto dto, UUID numeroInscricao, String documento, String cgf, String nomeRazaoSocial, String origemDebito, BigDecimal valorPrincipal, String nomeUsuario, LocalDateTime dataRegistro) {
+    assertEquals(numeroInscricao.toString(), dto.getNumeroInscricao());
     assertEquals(documento, dto.getDocumento());
     assertEquals(cgf, dto.getCgf());
     assertEquals(nomeRazaoSocial, dto.getNomeRazaoSocial());

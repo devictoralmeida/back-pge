@@ -61,7 +61,7 @@ class CorresponsavelMapperToModelTest {
     }
 
     @Test
-    void testConverterListUpdate() {
+    void test_converter_list_update() {
         List<CorresponsavelRequestDto> requestList = new ArrayList<>();
         CorresponsavelRequestDto dto1 = new CorresponsavelRequestDto();
         dto1.setTipoPessoa(TipoPessoa.PESSOA_FISICA);
@@ -85,7 +85,7 @@ class CorresponsavelMapperToModelTest {
     }
 
     @Test
-    void testConverterListUpdate_NullList() {
+    void test_converter_list_update_null_list() {
         Inscricao inscricaoMock = mock(Inscricao.class);
 
         List<Corresponsavel> corresponsaveis = CorresponsavelMapperToModel.converterListUpdate(null, inscricaoMock);
@@ -94,7 +94,7 @@ class CorresponsavelMapperToModelTest {
     }
 
     @Test
-    void testConverter_VerificaTipoPessoa_Exception() {
+    void test_converter_verifica_tipo_pessoa_exception() {
         CorresponsavelRequestDto dto = new CorresponsavelRequestDto();
         dto.setTipoPessoa(TipoPessoa.PESSOA_JURIDICA);
         dto.setNomeRazaoSocial("Empresa");

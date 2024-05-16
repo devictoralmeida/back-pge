@@ -78,7 +78,7 @@ class ResponseDtoTest {
   }
 
   @Test
-  void test_setmensagem() {
+  void test_set_mensagem() {
     String mensagem = "Sucesso ao Salvar Inscrição";
     ResponseDto<String> responseDto = new ResponseDto<String>();
 

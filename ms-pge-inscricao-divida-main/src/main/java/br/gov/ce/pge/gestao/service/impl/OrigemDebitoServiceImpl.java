@@ -19,20 +19,23 @@ public class OrigemDebitoServiceImpl implements OrigemDebitoService {
   @Override
   public OrigemDebitoResponseDto findById(UUID id) {
     try {
-      var response = this.atributosDividaFeingClient.findById(id);
+      var response = atributosDividaFeingClient.findById(id);
       return response.getBody().getData();
     } catch (FeignClientException e) {
       if (e.status() == 404) {
-        throw new NegocioException(this.getMessageErro(e.getMessage()));
+        throw new NegocioException(getMessageErro(e.getMessage()));
       }
 
       throw new NegocioException(e.getMessage());
     }
   }
 
-  public String getMessageErro(String errorMessage) {
+  String getMessageErro(String errorMessage) {
     int startIndexOfMessage = errorMessage.indexOf("mensagem\":\"") + "mensagem\":\"".length();
     int endIndexOfMessage = errorMessage.indexOf("\"", startIndexOfMessage);
+    if (endIndexOfMessage == -1) {
+      return errorMessage;
+    }
     return errorMessage.substring(startIndexOfMessage, endIndexOfMessage);
   }
 

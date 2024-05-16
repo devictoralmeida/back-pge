@@ -41,4 +41,7 @@ public class Inscricao extends AuditoriaUser {
     @Column(name = "ds_status_inscricao")
     @Enumerated(EnumType.STRING)
     private StatusInscricao status;
+
+    @Column(name = "nr_inscricao", length = 13, nullable = false)
+    private String numeroInscricao;
 }

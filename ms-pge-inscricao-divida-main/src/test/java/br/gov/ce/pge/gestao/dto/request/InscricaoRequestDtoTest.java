@@ -54,6 +54,16 @@ public class InscricaoRequestDtoTest {
         return model;
     }
 
+    public static InscricaoRequestDto get_inscricao_completa_divida_null() {
+        var model = new InscricaoRequestDto();
+        model.setId(UUID.fromString("c8bf3eff-2d65-46f7-bb6a-8f4c93be7886"));
+        model.setDevedor(DevedorRequestDtoTest.get_devedor_pessoa_fisica());
+        model.setStatus(StatusInscricao.EM_ANALISE);
+        model.setCorresponsaveis(CorresponsavelRequestDtoTest.get_list_corresponsaveis());
+        model.setDebitos(DebitoRequestDtoTest.get_debitos_list());
+        return model;
+    }
+
     public static InscricaoRequestDto get_inscricao_completa_update() {
         var model = new InscricaoRequestDto();
         model.setId(UUID.fromString("c8bf3eff-2d65-46f7-bb6a-8f4c93be7886"));

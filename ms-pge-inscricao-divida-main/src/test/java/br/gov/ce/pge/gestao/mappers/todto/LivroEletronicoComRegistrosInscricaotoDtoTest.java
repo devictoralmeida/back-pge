@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class LivroEletronicoComRegistrosInscricaotoDtoTest {
 
   @Test
-  void testMapToDto() {
+  void test_map_to_dto() {
     List<Object[]> results = new ArrayList<>();
     Object[] result1 = {UUID.randomUUID(), "Livro Exemplo", SituacaoLivro.ABERTO,
             LocalDateTime.now().minusDays(5), LocalDateTime.now(),
@@ -34,20 +34,21 @@ class LivroEletronicoComRegistrosInscricaotoDtoTest {
 
     LivroEletronicoComRegistrosInscricaoResponseDto dto = LivroEletronicoComRegistrosInscricaotoDto.mapToDto(results);
 
-    assertNotNull(dto);
-
-    assertEquals(result1[0], dto.getId());
-    assertEquals(result1[1], dto.getNome());
-    assertEquals(result1[2], dto.getSituacao());
-    assertEquals(result1[3], dto.getDataAbertura());
-    assertEquals(result1[4], dto.getDataFechamento());
+    assertLivro(result1, dto);
 
     List<RegistroInscricaoResponseDto> registros = dto.getRegistros();
     assertNotNull(registros);
     assertEquals(2, registros.size());
 
     RegistroInscricaoResponseDto registro1 = registros.get(0);
-    assertEquals(result1[5], registro1.getNumeroInscricao());
+    assertsRegistro(result1, registro1);
+
+    RegistroInscricaoResponseDto registro2 = registros.get(1);
+    assertsRegistro(result2, registro2);
+  }
+
+  private void assertsRegistro(Object[] result1, RegistroInscricaoResponseDto registro1) {
+    assertEquals(result1[5].toString(), registro1.getNumeroInscricao());
     assertEquals(result1[6], registro1.getDocumento());
     assertEquals(result1[7], registro1.getCgf());
     assertEquals(result1[8], registro1.getNomeRazaoSocial());
@@ -55,15 +56,15 @@ class LivroEletronicoComRegistrosInscricaotoDtoTest {
     assertEquals(((BigDecimal) result1[10]).add((BigDecimal) result1[13]), registro1.getValorPrincipal());
     assertEquals(result1[11], registro1.getNomeUsuario());
     assertEquals(result1[12], registro1.getDataRegistro());
+  }
 
-    RegistroInscricaoResponseDto registro2 = registros.get(1);
-    assertEquals(result2[5], registro2.getNumeroInscricao());
-    assertEquals(result2[6], registro2.getDocumento());
-    assertEquals(result2[7], registro2.getCgf());
-    assertEquals(result2[8], registro2.getNomeRazaoSocial());
-    assertEquals(result2[9], registro2.getOrigemDebito());
-    assertEquals(((BigDecimal) result2[10]).add((BigDecimal) result2[13]), registro2.getValorPrincipal());
-    assertEquals(result2[11], registro2.getNomeUsuario());
-    assertEquals(result2[12], registro2.getDataRegistro());
+  private void assertLivro(Object[] result1, LivroEletronicoComRegistrosInscricaoResponseDto dto) {
+    assertNotNull(dto);
+
+    assertEquals(result1[0], dto.getId());
+    assertEquals(result1[1], dto.getNome());
+    assertEquals(result1[2], dto.getSituacao());
+    assertEquals(result1[3], dto.getDataAbertura());
+    assertEquals(result1[4], dto.getDataFechamento());
   }
 }

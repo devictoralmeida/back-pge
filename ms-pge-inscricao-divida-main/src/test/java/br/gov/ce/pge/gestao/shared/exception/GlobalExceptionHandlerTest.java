@@ -56,7 +56,7 @@ class GlobalExceptionHandlerTest {
   }
 
   @Test
-  public void teste_psqlException_com_email() {
+  public void teste_psql_exception_com_email() {
     GlobalExceptionHandler handler = new GlobalExceptionHandler();
     DataIntegrityViolationException ex = new DataIntegrityViolationException(
             "duplicate key value violates unique constraint \"email\"");
@@ -67,7 +67,7 @@ class GlobalExceptionHandlerTest {
   }
 
   @Test
-  public void teste_psqlException_com_codigo() {
+  public void teste_psql_exception_com_codigo() {
     GlobalExceptionHandler handler = new GlobalExceptionHandler();
     DataIntegrityViolationException ex = new DataIntegrityViolationException(
             "duplicate key value violates unique constraint \"codigo\"");
@@ -78,7 +78,7 @@ class GlobalExceptionHandlerTest {
   }
 
   @Test
-  void test_exception_MethodArgumentNotValidException() {
+  void test_exception_method_argument_not_valid_exception() {
 
     WebRequest request = mock(WebRequest.class);
     HttpHeaders headers = new HttpHeaders();
@@ -102,7 +102,7 @@ class GlobalExceptionHandlerTest {
   }
 
   @Test
-  void test_exception_NegocioException() {
+  void test_exception_negocio_exception() {
 
     NegocioException ex = mock(NegocioException.class);
     String errorMessage = "Mensagem de erro";
@@ -119,7 +119,7 @@ class GlobalExceptionHandlerTest {
   }
 
   @Test
-  void test_exception_InvalidFormatException() {
+  void test_exception_invalid_format_exception() {
 
     HttpMessageNotReadableException ex = mock(HttpMessageNotReadableException.class);
     HttpHeaders headers = new HttpHeaders();

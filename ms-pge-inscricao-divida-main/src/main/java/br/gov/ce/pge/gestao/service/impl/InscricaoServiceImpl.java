@@ -1,10 +1,6 @@
 package br.gov.ce.pge.gestao.service.impl;
 
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
+import br.gov.ce.pge.gestao.constants.MessageCommonsContanst;
 import br.gov.ce.pge.gestao.dto.request.InscricaoRequestDto;
 import br.gov.ce.pge.gestao.dto.response.InscricaoResponseDto;
 import br.gov.ce.pge.gestao.dto.response.OrigemDebitoResponseDto;
@@ -13,12 +9,13 @@ import br.gov.ce.pge.gestao.entity.Inscricao;
 import br.gov.ce.pge.gestao.mappers.todto.InscricaoMapperToDto;
 import br.gov.ce.pge.gestao.mappers.tomodel.InscricaoMapperToModel;
 import br.gov.ce.pge.gestao.repository.InscricaoRepository;
-import br.gov.ce.pge.gestao.service.FileService;
-import br.gov.ce.pge.gestao.service.InscricaoService;
-import br.gov.ce.pge.gestao.service.OrigemDebitoService;
-import br.gov.ce.pge.gestao.service.RegistroLivroService;
-import br.gov.ce.pge.gestao.service.TipoReceitaService;
+import br.gov.ce.pge.gestao.service.*;
 import br.gov.ce.pge.gestao.shared.exception.NegocioException;
+import br.gov.ce.pge.gestao.shared.util.NumeroInscricaoUtil;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class InscricaoServiceImpl implements InscricaoService {
@@ -45,25 +42,36 @@ public class InscricaoServiceImpl implements InscricaoService {
 
     @Override
     public void save(InscricaoRequestDto request) {
-        var inscricao = InscricaoMapperToModel.converter(request, this.getTipoReceita(request), this.getOrigemDebito(request), fileService);
-        this.repository.save(inscricao);
-        this.registroLivroService.registrar(inscricao);
+        Inscricao inscricao = InscricaoMapperToModel.converter(request, getTipoReceita(request), getOrigemDebito(request), fileService);
+
+        Inscricao ultimoRegistro = getLast();
+
+        String numeroInscricao = ultimoRegistro != null ? NumeroInscricaoUtil.formatarNumeroInscricao(ultimoRegistro.getNumeroInscricao()) : NumeroInscricaoUtil.formatarNumeroInscricao("");
+        inscricao.setNumeroInscricao(numeroInscricao);
+
+        repository.save(inscricao);
+        registroLivroService.registrar(inscricao);
     }
 
     @Override
     public void update(UUID id, InscricaoRequestDto request) {
-        var inscricaoAlterada = InscricaoMapperToModel.converterUpdate(request, this.findByIdModel(id), this.getTipoReceita(request), this.getOrigemDebito(request), fileService);
-        this.repository.save(inscricaoAlterada);
+        var inscricaoAlterada = InscricaoMapperToModel.converterUpdate(request, findByIdModel(id), getTipoReceita(request), getOrigemDebito(request), fileService);
+        repository.save(inscricaoAlterada);
     }
 
     @Override
     public Inscricao findByIdModel(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new NegocioException("Dívida não encontrada."));
+        return repository.findById(id).orElseThrow(() -> new NegocioException(MessageCommonsContanst.MENSAGEM_DIVIDA_NAO_ENCONTRADA));
     }
 
     @Override
     public InscricaoResponseDto findById(UUID id) {
-        return InscricaoMapperToDto.converter(this.findByIdModel(id), fileService);
+        return InscricaoMapperToDto.converter(findByIdModel(id), fileService);
+    }
+
+    @Override
+    public Inscricao getLast() {
+        return repository.findLast();
     }
 
     private OrigemDebitoResponseDto getOrigemDebito(InscricaoRequestDto request) {

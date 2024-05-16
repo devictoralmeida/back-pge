@@ -38,7 +38,7 @@ public class TipoReceitaResponseDtoTest {
     }
 
     @Test
-    void testConstructorAndGettersSetters() {
+    void test_constructor_and_getters_setters() {
         UUID id = UUID.randomUUID();
         String codigo = "COD123";
         String descricao = "Descrição do tipo de receita";
@@ -60,6 +60,10 @@ public class TipoReceitaResponseDtoTest {
         tipoReceita.setDataCriacao(dataCriacao);
         tipoReceita.setDataAtualizacao(dataAtualizacao);
 
+        asserts(id, codigo, descricao, origemDebitos, natureza, situacao, dataCriacao, dataAtualizacao, tipoReceita);
+    }
+
+    private void asserts(UUID id, String codigo, String descricao, List<UUID> origemDebitos, Natureza natureza, Situacao situacao, LocalDateTime dataCriacao, LocalDateTime dataAtualizacao, TipoReceitaResponseDto tipoReceita) {
         Assertions.assertEquals(id, tipoReceita.getId());
         Assertions.assertEquals(codigo, tipoReceita.getCodigo());
         Assertions.assertEquals(descricao, tipoReceita.getDescricao());
@@ -71,7 +75,7 @@ public class TipoReceitaResponseDtoTest {
     }
 
     @Test
-    void testDefaultConstructor() {
+    void test_default_constructor() {
         TipoReceitaResponseDto tipoReceita = new TipoReceitaResponseDto();
 
         Assertions.assertNotNull(tipoReceita);

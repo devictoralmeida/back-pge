@@ -37,7 +37,7 @@ public class LivroEletronicoFilterResponseDtoTest {
   }
 
   @Test
-  void testConstructorAndGettersSetters() {
+  void test_constructor_and_getters_setters() {
     String id = "123456";
     String nome = "Livro Teste";
     SituacaoLivro situacao = SituacaoLivro.ABERTO;
@@ -53,6 +53,10 @@ public class LivroEletronicoFilterResponseDtoTest {
     dto.setDataFechamento(dataFechamento);
     dto.setPaginas(paginas);
 
+    asserts(id, nome, situacao, dataAbertura, dataFechamento, paginas, dto);
+  }
+
+  private void asserts(String id, String nome, SituacaoLivro situacao, LocalDateTime dataAbertura, LocalDateTime dataFechamento, int paginas, LivroEletronicoFilterResponseDto dto) {
     assertEquals(id, dto.getId());
     assertEquals(nome, dto.getNome());
     assertEquals(situacao, dto.getSituacao());

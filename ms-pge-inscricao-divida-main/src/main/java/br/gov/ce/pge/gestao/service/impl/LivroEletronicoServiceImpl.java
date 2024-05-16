@@ -1,8 +1,10 @@
 package br.gov.ce.pge.gestao.service.impl;
 
+import br.gov.ce.pge.gestao.constants.MessageCommonsContanst;
 import br.gov.ce.pge.gestao.dao.LivroEletronicoDao;
 import br.gov.ce.pge.gestao.dto.request.LivroEletronicoFilterRequestDto;
 import br.gov.ce.pge.gestao.dto.response.LivroEletronicoFilterResponseDto;
+import br.gov.ce.pge.gestao.dto.response.LivroEletronicoResponseDto;
 import br.gov.ce.pge.gestao.entity.LivroEletronico;
 import br.gov.ce.pge.gestao.enums.SituacaoLivro;
 import br.gov.ce.pge.gestao.repository.LivroEletronicoRepository;
@@ -10,6 +12,8 @@ import br.gov.ce.pge.gestao.repository.RegistroLivroRepository;
 import br.gov.ce.pge.gestao.service.LivroEletronicoService;
 import br.gov.ce.pge.gestao.service.OrigemDebitoService;
 import br.gov.ce.pge.gestao.shared.exception.NegocioException;
+import br.gov.ce.pge.gestao.shared.util.TotalPaginasLinhasUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +24,7 @@ import java.util.UUID;
 
 @Service
 public class LivroEletronicoServiceImpl implements LivroEletronicoService {
-  private static final String ASSISTENTE_VIRTUAL = "Assistente Virtual";
-  private static final String MSG_ERRO_LIVRO_INEXISTENTE = "Não existe livro aberto";
-  private static final String MSG_ERRO_LIVRO_ABERTO = "Já existe um livro aberto";
+
   private final LivroEletronicoRepository repository;
   private final RegistroLivroRepository registroLivroRepository;
   private final LivroEletronicoDao dao;
@@ -35,37 +37,37 @@ public class LivroEletronicoServiceImpl implements LivroEletronicoService {
     this.origemDebitoService = origemDebitoService;
   }
 
-  @Scheduled(cron = "0 39 14 30 4 ?")
+  @Scheduled(cron = "0 0 0 1 1 ?")
   public void abertura() {
 
-    if (this.livroAbertoExiste()) {
-      throw new NegocioException(MSG_ERRO_LIVRO_ABERTO);
+    if (livroAbertoExiste()) {
+      throw new NegocioException(MessageCommonsContanst.MSG_ERRO_LIVRO_ABERTO);
     }
 
-    this.repository.save(this.createLivro());
+    repository.save(createLivro());
 
   }
 
   @Scheduled(cron = "0 59 23 31 12 ?")
   public void fechamento() {
 
-    LivroEletronico livro = this.findByLivroAberto();
+    LivroEletronico livro = findByLivroAberto();
 
     livro.setDataFechamento(LocalDateTime.now());
     livro.setSituacao(SituacaoLivro.FECHADO);
 
-    this.repository.save(livro);
+    repository.save(livro);
   }
 
   public boolean livroAbertoExiste() {
-    return this.repository.findBySituacao(SituacaoLivro.ABERTO) != null;
+    return repository.findBySituacao(SituacaoLivro.ABERTO) != null;
   }
 
   public LivroEletronico createLivro() {
     var livro = new LivroEletronico();
     livro.setNome(String.valueOf(LocalDate.now().getYear()));
     livro.setSituacao(SituacaoLivro.ABERTO);
-    livro.setUsuarioResponsavel(ASSISTENTE_VIRTUAL);
+    livro.setUsuarioResponsavel(MessageCommonsContanst.ASSISTENTE_VIRTUAL);
     livro.setDataAbertura(LocalDateTime.now());
     return livro;
   }
@@ -73,10 +75,10 @@ public class LivroEletronicoServiceImpl implements LivroEletronicoService {
   @Override
 
   public LivroEletronico findByLivroAberto() {
-    LivroEletronico livro = this.repository.findBySituacao(SituacaoLivro.ABERTO);
+    LivroEletronico livro = repository.findBySituacao(SituacaoLivro.ABERTO);
 
     if (livro == null) {
-      throw new NegocioException(MSG_ERRO_LIVRO_INEXISTENTE);
+      throw new NegocioException(MessageCommonsContanst.MSG_ERRO_LIVRO_INEXISTENTE);
     }
 
     return livro;
@@ -84,15 +86,39 @@ public class LivroEletronicoServiceImpl implements LivroEletronicoService {
 
   @Override
   public List<LivroEletronicoFilterResponseDto> findByFilter(LivroEletronicoFilterRequestDto request) {
-    List<LivroEletronicoFilterResponseDto> filters = this.dao.findByFilter(request);
+    List<LivroEletronicoFilterResponseDto> filters = dao.findByFilter(request);
 
     for (LivroEletronicoFilterResponseDto livro : filters) {
       UUID idLivro = UUID.fromString(livro.getId());
-      Integer totalRegistrosLivro = this.registroLivroRepository.countByLivroEletronicoId(idLivro);
+      Integer totalRegistrosLivro = registroLivroRepository.countByLivroEletronicoId(idLivro);
       livro.setPaginas((int) Math.ceil((double) totalRegistrosLivro / 50));
     }
 
     return filters;
   }
+
+  @Override
+  public LivroEletronicoResponseDto findById(UUID id) {
+
+    Integer totalRegistrosLivro = registroLivroRepository.countByLivroEletronicoId(id);
+
+    var livroResponseDto = new LivroEletronicoResponseDto();
+
+    var livro = findByIdModel(id);
+
+    BeanUtils.copyProperties(livro, livroResponseDto);
+
+    livroResponseDto.setPaginas(TotalPaginasLinhasUtil.getTotalPaginas(totalRegistrosLivro));
+
+    livroResponseDto.setTotalLinhasUltimaPagina(TotalPaginasLinhasUtil.getRestoDivisao(totalRegistrosLivro));
+
+    return livroResponseDto;
+  }
+
+  @Override
+  public LivroEletronico findByIdModel(UUID id) {
+    return repository.findById(id).orElseThrow(() -> new NegocioException(MessageCommonsContanst.MSG_ERRO_LIVRO_INEXISTENTE));
+  }
+
 
 }
