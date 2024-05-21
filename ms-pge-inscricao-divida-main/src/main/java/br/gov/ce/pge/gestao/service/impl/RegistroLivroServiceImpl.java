@@ -42,7 +42,7 @@ public class RegistroLivroServiceImpl implements RegistroLivroService {
 
 		var totalPaginas = TotalPaginasLinhasUtil.getTotalPaginas(totalRegistros);
 
-		int pagina = totalPaginas == 0 ? 1 : totalPaginas;
+		int pagina = totalPaginas == SharedConstant.INICIO_INDEX ? SharedConstant.INCREMENTO : totalPaginas;
 
 		var registro = new RegistroLivro();
 		registro.setInscricao(inscricao);

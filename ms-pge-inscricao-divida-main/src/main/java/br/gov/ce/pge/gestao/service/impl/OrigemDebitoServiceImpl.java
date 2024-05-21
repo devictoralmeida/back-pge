@@ -1,6 +1,7 @@
 package br.gov.ce.pge.gestao.service.impl;
 
 import br.gov.ce.pge.gestao.client.OrigemDebitoFeingClient;
+import br.gov.ce.pge.gestao.constants.SharedConstant;
 import br.gov.ce.pge.gestao.dto.response.OrigemDebitoResponseDto;
 import br.gov.ce.pge.gestao.service.OrigemDebitoService;
 import br.gov.ce.pge.gestao.shared.exception.NegocioException;
@@ -22,7 +23,7 @@ public class OrigemDebitoServiceImpl implements OrigemDebitoService {
       var response = atributosDividaFeingClient.findById(id);
       return response.getBody().getData();
     } catch (FeignClientException e) {
-      if (e.status() == 404) {
+      if (e.status() == SharedConstant.STATUS_BAD_REQUEST) {
         throw new NegocioException(getMessageErro(e.getMessage()));
       }
 

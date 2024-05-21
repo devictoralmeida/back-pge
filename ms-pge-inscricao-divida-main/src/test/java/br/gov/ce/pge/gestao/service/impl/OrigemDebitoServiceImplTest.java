@@ -82,6 +82,33 @@ class OrigemDebitoServiceImplTest {
     }
 
     @Test
+    void test_find_by_id_exception_bad_request() throws IOException {
+        UUID id = UUID.fromString("457d0cce-48b6-458d-b912-bb6d80fac299");
+        Request request = Request.create(Request.HttpMethod.GET, baseUrl + "/origem-debito/" + id,
+                new HashMap<>(), null, new RequestTemplate());
+
+        final String errorMessage = "{\"mensagem\":\"Origem débito não encontrada.\"}";
+        byte[] body = errorMessage.getBytes(StandardCharsets.UTF_8);
+        Response response = Response.builder()
+                .status(400)
+                .reason("Bad request")
+                .request(request)
+                .body(body)
+                .build();
+
+        FeignException feignException = new FeignException.BadRequest(
+                "Origem débito não encontrada.", request, response.body().asInputStream().readAllBytes(), null);
+
+        when(feignClient.findById(any(UUID.class))).thenThrow(feignException);
+
+        NegocioException exception = assertThrows(NegocioException.class, () -> {
+            service.findById(id);
+        });
+
+        assertEquals("Origem débito não encontrada.", exception.getMessage());
+    }
+
+    @Test
     void test_get_message_erro() {
         final String errorMessage = "{\"mensagem\":\"Origem débito não encontrada.\"}";
         String extractedMessage = service.getMessageErro(errorMessage);

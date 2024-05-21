@@ -64,11 +64,17 @@ public class LivroEletronicoServiceImpl implements LivroEletronicoService {
   }
 
   public LivroEletronico createLivro() {
+
     var livro = new LivroEletronico();
+
     livro.setNome(String.valueOf(LocalDate.now().getYear()));
+
     livro.setSituacao(SituacaoLivro.ABERTO);
+
     livro.setUsuarioResponsavel(MessageCommonsContanst.ASSISTENTE_VIRTUAL);
+
     livro.setDataAbertura(LocalDateTime.now());
+    
     return livro;
   }
 
@@ -89,9 +95,14 @@ public class LivroEletronicoServiceImpl implements LivroEletronicoService {
     List<LivroEletronicoFilterResponseDto> filters = dao.findByFilter(request);
 
     for (LivroEletronicoFilterResponseDto livro : filters) {
+
       UUID idLivro = UUID.fromString(livro.getId());
+
       Integer totalRegistrosLivro = registroLivroRepository.countByLivroEletronicoId(idLivro);
-      livro.setPaginas((int) Math.ceil((double) totalRegistrosLivro / 50));
+
+      var totalPaginas = TotalPaginasLinhasUtil.getTotalPaginas(totalRegistrosLivro);
+
+      livro.setPaginas(totalPaginas);
     }
 
     return filters;

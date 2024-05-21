@@ -84,6 +84,33 @@ class TipoReceitaServiceImplTest {
     }
 
     @Test
+    void test_find_by_id_bad_request_exception() throws IOException {
+        UUID id = UUID.fromString("457d0cce-48b6-458d-b912-bb6d80fac212");
+        Request request = Request.create(Request.HttpMethod.GET, baseUrl + "/tipo-receita/" + id,
+                new HashMap<>(), null, new RequestTemplate());
+
+        final String errorMessage = "{\"mensagem\":\"Tipo de Receita não encontrada.\"}";
+        byte[] body = errorMessage.getBytes(StandardCharsets.UTF_8);
+        Response response = Response.builder()
+                .status(400)
+                .reason("Bad request")
+                .request(request)
+                .body(body)
+                .build();
+
+        FeignException feignException = new FeignException.BadRequest(
+                "Tipo de Receita não encontrada.", request, response.body().asInputStream().readAllBytes(), null);
+
+        when(feignClient.findById(any(UUID.class))).thenThrow(feignException);
+
+        NegocioException exception = assertThrows(NegocioException.class, () -> {
+            service.findById(id);
+        });
+
+        assertEquals("Tipo de Receita não encontrada.", exception.getMessage());
+    }
+
+    @Test
     void test_get_message_erro() {
         final String errorMessage = "{\"mensagem\":\"Erro esperado para teste.\"}";
         String extractedMessage = service.getMessageErro(errorMessage);

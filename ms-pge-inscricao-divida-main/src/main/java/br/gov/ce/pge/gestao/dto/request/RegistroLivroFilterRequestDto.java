@@ -39,6 +39,8 @@ public class RegistroLivroFilterRequestDto {
 
     private LocalDate dataRegistro;
 
+    private String consultaGenerica;
+
     @JsonIgnore
     private long offset;
 
@@ -59,6 +61,7 @@ public class RegistroLivroFilterRequestDto {
         filter.put("pagina", this.pagina == null ? null : this.pagina);
         filter.put("linha", this.linha == null ? null : this.linha);
         filter.put("dataRegistro", this.dataRegistro == null ? null : this.getDataRegistro());
+        filter.put("consultaGenerica", this.consultaGenerica == null ? null : this.getConsultaGenerica());
         filter.put("offset", offset);
         filter.put("limit", limit);
         filter.put("orderBy", orderBy == null ? "dev.nm_devedor" : getOrdenacao(orderBy));

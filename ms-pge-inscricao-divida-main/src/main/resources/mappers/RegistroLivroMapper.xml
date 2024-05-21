@@ -47,6 +47,26 @@
                 AND i.nr_inscricao = #{numeroInscricao}
             </if>
 
+            <if test="consultaGenerica != null">
+                AND (dev.nr_documento_devedor = #{consultaGenerica}
+                OR dev.nr_documento_devedor = #{consultaGenerica}
+                OR dev.nr_cgf_devedor = #{consultaGenerica}
+                OR dev.nm_devedor LIKE #{consultaGenerica}
+                OR (CASE
+                WHEN #{consultaGenerica} IS NOT NULL AND #{consultaGenerica} ~ '^\d{4}-\d{2}-\d{2}$' THEN DATE(r.dt_criacao) = TO_DATE(#{consultaGenerica}, 'YYYY-MM-DD')
+                ELSE FALSE
+                END)
+                OR (CASE
+                WHEN #{consultaGenerica} IS NOT NULL AND #{consultaGenerica} ~ '^\d+$' THEN r.nr_pagina = CAST(#{consultaGenerica} AS INTEGER)
+                ELSE FALSE
+                END)
+                OR (CASE
+                WHEN #{consultaGenerica} IS NOT NULL AND #{consultaGenerica} ~ '^\d+$' THEN r.nr_linha = CAST(#{consultaGenerica} AS INTEGER)
+                ELSE FALSE
+                END)
+                OR i.nr_inscricao = #{consultaGenerica})
+            </if>
+
         </where>
     </select>
 
@@ -112,6 +132,26 @@
 
             <if test="numeroInscricao != null">
                 AND i.nr_inscricao = #{numeroInscricao}
+            </if>
+
+            <if test="consultaGenerica != null">
+                AND (dev.nr_documento_devedor = #{consultaGenerica}
+                OR dev.nr_documento_devedor = #{consultaGenerica}
+                OR dev.nr_cgf_devedor = #{consultaGenerica}
+                OR dev.nm_devedor LIKE #{consultaGenerica}
+                OR (CASE
+                WHEN #{consultaGenerica} IS NOT NULL AND #{consultaGenerica} ~ '^\d{4}-\d{2}-\d{2}$' THEN DATE(r.dt_criacao) = TO_DATE(#{consultaGenerica}, 'YYYY-MM-DD')
+                ELSE FALSE
+                END)
+                OR (CASE
+                WHEN #{consultaGenerica} IS NOT NULL AND #{consultaGenerica} ~ '^\d+$' THEN r.nr_pagina = CAST(#{consultaGenerica} AS INTEGER)
+                ELSE FALSE
+                END)
+                OR (CASE
+                WHEN #{consultaGenerica} IS NOT NULL AND #{consultaGenerica} ~ '^\d+$' THEN r.nr_linha = CAST(#{consultaGenerica} AS INTEGER)
+                ELSE FALSE
+                END)
+                OR i.nr_inscricao = #{consultaGenerica})
             </if>
 
         </where>
