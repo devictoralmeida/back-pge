@@ -1,2 +1,0 @@
-ALTER TABLE tb_usuario RENAME COLUMN
-dt_ultimo_acesso_usario TO dt_ultimo_acesso_usuario;
