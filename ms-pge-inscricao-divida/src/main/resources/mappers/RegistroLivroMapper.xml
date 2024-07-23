@@ -1,0 +1,197 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="RegistroLivroDao">
+    <select id="countfindByFilter" resultType="int">
+        SELECT COUNT(*) FROM tb_registro_livro r
+        INNER JOIN tb_livro_eletronico l ON l.ci_livro_eletronico = r.cd_livro_eletronico
+        INNER JOIN tb_divida div ON r.cd_divida = div.ci_divida
+        INNER JOIN tb_divida_pessoa dp ON dp.cd_divida = div.ci_divida
+        INNER JOIN tb_pessoa p ON p.ci_pessoa = dp.cd_pessoa
+        INNER JOIN tb_papel_pessoa_divida ppd ON ppd.ci_papel_pessoa_divida = dp.cd_papel_pessoa_divida
+        INNER JOIN tb_debito deb ON deb.cd_divida = div.ci_divida
+        INNER JOIN tb_tipo_devedor tdev ON tdev.ci_tipo_devedor = ppd.cd_tipo_devedor
+
+        <where>
+
+            <if test="idLivro != null">
+                AND ppd.vl_papel_pessoa_divida = 'Devedor'
+                AND tdev.nm_tipo_devedor = 'Principal'
+                AND p.cd_tipo_pessoa IS NOT NULL
+                AND l.ci_livro_eletronico = #{idLivro}
+            </if>
+
+            <if test="cpf != null">
+                AND p.nr_documento_pessoa = #{cpf}
+            </if>
+
+            <if test="cnpj != null">
+                AND p.nr_documento_pessoa LIKE #{cnpj}
+            </if>
+
+            <if test="cgf != null">
+                AND p.nr_cgf_pessoa = #{cgf}
+            </if>
+
+            <if test="nomeRazaoSocial != null || nomeUsuario != null">
+                AND (UPPER(p.nm_pessoa) LIKE #{nomeRazaoSocial} OR UPPER(r.nm_usuario_cadastro) LIKE #{nomeUsuario})
+            </if>
+
+            <if test="dataRegistro != null">
+                AND DATE(r.dt_criacao) = #{dataRegistro}
+            </if>
+
+            <if test="pagina != null">
+                AND r.nr_pagina = #{pagina}
+            </if>
+
+            <if test="linha != null">
+                AND r.nr_linha = #{linha}
+            </if>
+
+            <if test="numeroInscricao != null">
+                AND div.nr_inscricao = #{numeroInscricao}
+            </if>
+
+            <if test="consultaGenerica != null">
+                <![CDATA[
+                AND (
+                    p.nr_documento_pessoa LIKE #{consultaGenerica,jdbcType=VARCHAR} || '%'
+                    OR p.nr_cgf_pessoa LIKE #{consultaGenerica,jdbcType=VARCHAR} || '%'
+                    OR (
+                        #{consultaGenerica,jdbcType=VARCHAR} IS NOT NULL
+                        AND #{consultaGenerica,jdbcType=VARCHAR} ~ '^\d+$'
+                        AND (
+                            CASE
+                            WHEN CAST(#{consultaGenerica,jdbcType=NUMERIC} AS NUMERIC) <= 2147483647 THEN r.nr_pagina = CAST(#{consultaGenerica,jdbcType=NUMERIC} AS INTEGER)
+                            ELSE FALSE
+                            END
+                        )
+                    )
+                    OR (
+                        #{consultaGenerica,jdbcType=VARCHAR} IS NOT NULL
+                        AND #{consultaGenerica,jdbcType=VARCHAR} ~ '^\d+$'
+                        AND (
+                            CASE
+                            WHEN CAST(#{consultaGenerica,jdbcType=NUMERIC} AS NUMERIC) <= 2147483647 THEN r.nr_linha = CAST(#{consultaGenerica,jdbcType=NUMERIC} AS INTEGER)
+                            ELSE FALSE
+                            END
+                        )
+                    )
+                    OR div.nr_inscricao = #{consultaGenerica,jdbcType=VARCHAR} OR vl_principal_debito = CAST(#{consultaGenerica,jdbcType=NUMERIC} AS NUMERIC)
+                )
+                ]]>
+            </if>
+
+        </where>
+    </select>
+
+    <resultMap id="resultMap" type="br.gov.ce.pge.gestao.dto.response.RegistroInscricaoResponseDto">
+
+        <result property="numeroInscricao" column="nr_inscricao" />
+        <result property="cgf" column="nr_cgf_pessoa" />
+        <result property="documento" column="nr_documento_pessoa" />
+        <result property="nomeRazaoSocial" column="nm_pessoa" />
+        <result property="valorPrincipal" column="vl_principal_debito" />
+        <result property="nomeUsuario" column="nm_usuario_cadastro" />
+        <result property="dataRegistro" column="dt_criacao" />
+        <result property="origemDebito" column="cd_origem_debito" />
+        <result property="pagina" column="nr_pagina" />
+        <result property="linha" column="nr_linha" />
+
+    </resultMap>
+
+    <select id="findByRegistroInscricaoFilter" resultMap="resultMap">
+        SELECT p.nr_cgf_pessoa, p.nr_documento_pessoa, p.nm_pessoa,
+        vl_principal_debito, r.nm_usuario_cadastro, r.dt_criacao, div.cd_origem_debito, r.nr_pagina, r.nr_linha,
+        div.nr_inscricao FROM tb_registro_livro r
+        INNER JOIN tb_livro_eletronico l ON l.ci_livro_eletronico = r.cd_livro_eletronico
+        INNER JOIN tb_divida div ON r.cd_divida = div.ci_divida
+        INNER JOIN tb_divida_pessoa dp ON dp.cd_divida = div.ci_divida
+        INNER JOIN tb_pessoa p ON p.ci_pessoa = dp.cd_pessoa
+        INNER JOIN tb_papel_pessoa_divida ppd ON ppd.ci_papel_pessoa_divida = dp.cd_papel_pessoa_divida
+        INNER JOIN tb_debito deb ON deb.cd_divida = div.ci_divida
+        INNER JOIN tb_tipo_devedor tdev ON tdev.ci_tipo_devedor = ppd.cd_tipo_devedor
+
+        <where>
+
+            <if test="idLivro != null">
+                AND ppd.vl_papel_pessoa_divida = 'Devedor'
+                AND tdev.nm_tipo_devedor = 'Principal'
+                AND p.cd_tipo_pessoa IS NOT NULL
+                AND l.ci_livro_eletronico = #{idLivro}
+            </if>
+
+            <if test="cpf != null">
+                AND p.nr_documento_pessoa = #{cpf}
+            </if>
+
+            <if test="cnpj != null">
+                AND p.nr_documento_pessoa LIKE #{cnpj}
+            </if>
+
+            <if test="cgf != null">
+                AND p.nr_cgf_pessoa = #{cgf}
+            </if>
+
+            <if test="nomeRazaoSocial != null || nomeUsuario != null">
+                AND (UPPER(p.nm_pessoa) LIKE #{nomeRazaoSocial} OR UPPER(r.nm_usuario_cadastro) LIKE #{nomeUsuario})
+            </if>
+
+            <if test="dataRegistro != null">
+                AND DATE(r.dt_criacao) = #{dataRegistro}
+            </if>
+
+            <if test="pagina != null">
+                AND r.nr_pagina = #{pagina}
+            </if>
+
+            <if test="linha != null">
+                AND r.nr_linha = #{linha}
+            </if>
+
+            <if test="numeroInscricao != null">
+                AND div.nr_inscricao = #{numeroInscricao}
+            </if>
+
+            <if test="consultaGenerica != null">
+                <![CDATA[
+                AND (
+                    p.nr_documento_pessoa LIKE #{consultaGenerica,jdbcType=VARCHAR} || '%'
+                    OR p.nr_cgf_pessoa LIKE #{consultaGenerica,jdbcType=VARCHAR} || '%'
+                    OR (
+                        #{consultaGenerica,jdbcType=VARCHAR} IS NOT NULL
+                        AND #{consultaGenerica,jdbcType=VARCHAR} ~ '^\d+$'
+                        AND (
+                            CASE
+                            WHEN CAST(#{consultaGenerica,jdbcType=NUMERIC} AS NUMERIC) <= 2147483647 THEN r.nr_pagina = CAST(#{consultaGenerica,jdbcType=NUMERIC} AS INTEGER)
+                            ELSE FALSE
+                            END
+                        )
+                    )
+                    OR (
+                        #{consultaGenerica,jdbcType=VARCHAR} IS NOT NULL
+                        AND #{consultaGenerica,jdbcType=VARCHAR} ~ '^\d+$'
+                        AND (
+                            CASE
+                            WHEN CAST(#{consultaGenerica,jdbcType=NUMERIC} AS NUMERIC) <= 2147483647 THEN r.nr_linha = CAST(#{consultaGenerica,jdbcType=NUMERIC} AS INTEGER)
+                            ELSE FALSE
+                            END
+                        )
+                    )
+                    OR div.nr_inscricao = #{consultaGenerica,jdbcType=VARCHAR} OR vl_principal_debito = CAST(#{consultaGenerica,jdbcType=NUMERIC} AS NUMERIC)
+                )
+                ]]>
+            </if>
+
+        </where>
+
+        <if test="orderBy != null">
+            ORDER BY
+            ${orderBy}
+        </if>
+
+        OFFSET #{offset} ROWS
+        FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+</mapper>

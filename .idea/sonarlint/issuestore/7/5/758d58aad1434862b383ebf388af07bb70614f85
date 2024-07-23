@@ -1,0 +1,13 @@
+
+b
+java:S1452"&Remove usage of generic wildcard type.(θΝ¦J$0238b83f-938a-4f35-b03f-1ffc33bcf3c9
+©
+java:S1130$"‹Remove the declaration of thrown exception 'com.fasterxml.jackson.core.JsonProcessingException', as it cannot be thrown from method's body.(κΎέ‡8Òι¨έ„2
+b
+java:S1452$"&Remove usage of generic wildcard type.(κΎέ‡J$71f6b0c0-1599-40ff-9753-3caad6d44d9a
+b
+java:S1452*"&Remove usage of generic wildcard type.(δΆφόJ$bb5afdb8-93ae-4b2d-93bd-abdb205a8432
+b
+java:S1452/"&Remove usage of generic wildcard type.(σÿΜ¦J$b53ea14d-6cdd-408e-aadd-328a73fb3532
+g
+java:S14524"&Remove usage of generic wildcard type.(ν‹ΐψÿÿÿÿJ$b2f45f02-5089-49ee-8762-2ac74b0621e4

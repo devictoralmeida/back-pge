@@ -1,0 +1,40 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OrigemDebitoDao">
+
+	<resultMap id="resultDebitoOrigemFilter"
+		type="br.gov.ce.pge.gestao.dto.response.OrigemDebitoConsultaResponseDto">
+		<result property="id" column="ci_origem_debito" />
+		<result property="nome" column="nm_origem_debito" />
+		<result property="descricao" column="ds_origem_debito" />
+		<result property="situacao" column="ds_situacao_origem_debito" />
+		<result property="dataCriacao" column="dt_criacao" />
+		<result property="dataAtualizacao" column="dt_atualizacao" />
+	</resultMap>
+
+	<select id="findOrigemDebitosByFilter" resultMap="resultDebitoOrigemFilter">
+		
+		SELECT * FROM tb_origem_debito o
+		
+		<where>
+			
+	        <if test="nome != null">
+	            AND upper(o.nm_origem_debito) like #{nome}
+	        </if>
+	        
+	        <if test="descricao != null">
+	            AND upper(o.ds_origem_debito) like #{descricao}
+	        </if>
+	        
+	        <if test="situacao != null">
+	            AND o.ds_situacao_origem_debito = #{situacao}
+	        </if>
+	        
+   		 </where>
+		
+		  order by o.nm_origem_debito asc
+	</select>
+
+</mapper>

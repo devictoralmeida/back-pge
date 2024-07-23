@@ -1,0 +1,17 @@
+
+Â
+java:S6204P"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ãšõùÿÿÿÿ8äåŒƒ2J$c8e9f019-5972-4942-a67b-8af0adbb604f
+½
+java:S6204Q"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(â³ñ8ıŸšŒƒ2J$65b6ef43-7fb9-4f9f-961e-dfc7aa9709d9
+Ã
+java:S6204•"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ë¡¯ùüÿÿÿÿ8ƒ šŒƒ2J$09497478-0c7f-4e17-a1f5-7fb6225961c3
+Ã
+java:S6204á"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ãšõùÿÿÿÿ8ÇÑıÜ„2J$c10c3f98-eaf0-44de-865a-ae43aa6c932c
+¾
+java:S6204â"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(â³ñ8ÇÑıÜ„2J$a7e30dd5-0078-4384-9e4c-a018da9f4171
+Ã
+java:S6204¦"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(şëìÿÿÿÿÿ8¼ÔœŒƒ2J$6b9830d5-0452-4bdb-8e6e-609d4acf8e0a
+„
+java:S1612¦";Replace this lambda with method reference 'Sistema::getId'.(şëìÿÿÿÿÿ8” šŒƒ2J$e11f8f23-8f67-4e86-9b69-e0d1c91bd2f0
+Ã
+java:S6204§"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ÜçÇÔûÿÿÿÿ8ÅÔœŒƒ2J$0b6b337f-58d9-44c3-9333-9aaba4ad3930

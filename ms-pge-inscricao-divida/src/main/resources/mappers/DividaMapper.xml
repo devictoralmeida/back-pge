@@ -1,0 +1,662 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DividaDao">
+    <select id="findUnique" resultType="int">
+        SELECT count(*) from tb_divida div
+        INNER JOIN tb_divida_pessoa dp ON dp.cd_divida = div.ci_divida
+        INNER JOIN tb_pessoa p ON p.ci_pessoa = dp.cd_pessoa
+        INNER JOIN tb_debito deb ON deb.cd_divida = div.ci_divida
+        INNER JOIN tb_papel_pessoa_divida ppd ON ppd.ci_papel_pessoa_divida = dp.cd_papel_pessoa_divida
+        INNER JOIN tb_tipo_papel_pessoa_divida tppd ON tppd.ci_tipo_papel_pessoa_divida =
+        ppd.cd_tipo_papel_pessoa_divida
+
+        <where>
+            1=1
+            AND p.nr_documento_pessoa IN
+            <foreach item="item" index="index" collection="documentosDevedores" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            AND ppd.cd_tipo_papel_pessoa_divida::VARCHAR = #{idTipoPapelPessoaDevedora}
+            AND div.cd_origem_debito::VARCHAR = #{origemDebito}
+            AND div.cd_tipo_receita::VARCHAR = #{tipoReceita}
+            AND (
+            deb.ds_referencia_inicial IN
+            <foreach item="item" index="index" collection="referenciasIniciaisDebitos" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            <if test="referenciasFinaisDebitos != null">
+                AND deb.ds_referencia_final IN
+                <foreach item="item" index="index" collection="referenciasFinaisDebitos" open="(" separator=","
+                         close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="valoresPrincipaisDebitos != null">
+                AND deb.vl_principal_debito IN
+                <foreach item="item" index="index" collection="valoresPrincipaisDebitos" open="(" separator=","
+                         close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="valoresMultasDebitos != null">
+                AND deb.vl_multa_debito IN
+                <foreach item="item" index="index" collection="valoresMultasDebitos" open="(" separator=","
+                         close=")">
+                    #{item}
+                </foreach>
+            </if>
+            )
+        </where>
+    </select>
+
+    <select id="countfindByFilter" resultType="int">
+        SELECT COUNT(*) FROM tb_divida div
+        INNER JOIN tb_divida_pessoa dp ON dp.cd_divida = div.ci_divida
+        INNER JOIN tb_pessoa p ON p.ci_pessoa = dp.cd_pessoa
+        INNER JOIN tb_papel_pessoa_divida ppd ON ppd.ci_papel_pessoa_divida = dp.cd_papel_pessoa_divida
+        INNER JOIN tb_debito deb ON deb.cd_divida = div.ci_divida
+        INNER JOIN tb_tipo_devedor tdev ON tdev.ci_tipo_devedor = ppd.cd_tipo_devedor
+        INNER JOIN tb_tipo_pessoa tp ON p.cd_tipo_pessoa = tp.ci_tipo_pessoa
+        LEFT JOIN tb_fase_divida fd ON fd.cd_divida = div.ci_divida
+
+        <where>
+
+            <if test="cpf != null">
+                AND p.nr_documento_pessoa = #{cpf}
+            </if>
+
+            <if test="cnpj != null">
+                AND p.nr_documento_pessoa LIKE #{cnpj} || '%'
+            </if>
+
+            <if test="cgf != null">
+                AND p.nr_cgf_pessoa = #{cgf}
+            </if>
+
+            <if test="nomeDevedor != null">
+                AND (UPPER(p.nm_pessoa) LIKE #{nomeDevedor})
+            </if>
+
+            <if test="numeroInscricao != null">
+                AND div.nr_inscricao = #{numeroInscricao}
+            </if>
+
+            <if test="tipoDevedor != null">
+                <choose>
+                    <when test="tipoDevedor == 'TODOS'">
+                        AND tdev.nm_tipo_devedor != ''
+                    </when>
+                    <otherwise>
+                        AND tdev.ci_tipo_devedor::VARCHAR = #{tipoDevedor}
+                    </otherwise>
+                </choose>
+            </if>
+
+            <if test="numeroProcesso != null">
+                AND div.nr_processo_administrativo = #{numeroProcesso}
+            </if>
+
+            <if test="protocoloJudicial != null">
+                AND div.nr_protocolo_judicial = #{protocoloJudicial}
+            </if>
+
+            <if test="guiaItcd != null">
+                AND div.nr_guia_itcd = #{guiaItcd}
+            </if>
+
+            <if test="numeroAI != null">
+                AND div.nr_processo_administrativo = #{numeroAI}
+            </if>
+
+            <if test="placa != null">
+                AND div.ds_placa_veiculo = #{placa}
+            </if>
+
+            <if test="chassi != null">
+                AND div.nr_chassi = #{chassi}
+            </if>
+
+            <if test="tipoValor != null">
+                <if test="tipoValor == 'VALOR_PRINCIPAL'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND deb.vl_principal_debito >= #{valorUm} AND deb.vl_principal_debito <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND deb.vl_principal_debito = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND deb.vl_principal_debito != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND deb.vl_principal_debito < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND deb.vl_principal_debito > #{valorUm}
+                    </if>
+                </if>
+
+                <if test="tipoValor == 'VALOR_MULTA'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND deb.vl_multa_debito >= #{valorUm} AND deb.vl_multa_debito <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND deb.vl_multa_debito = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND deb.vl_multa_debito != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND deb.vl_multa_debito < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND deb.vl_multa_debito > #{valorUm}
+                    </if>
+                </if>
+
+                <if test="tipoValor == 'SALDO_PRINCIPAL_MULTA'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND (deb.vl_principal_debito + deb.vl_multa_debito) >= #{valorUm} AND (deb.vl_principal_debito + deb.vl_multa_debito) <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND (deb.vl_principal_debito + deb.vl_multa_debito) = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND (deb.vl_principal_debito + deb.vl_multa_debito) != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND (deb.vl_principal_debito + deb.vl_multa_debito) < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND (deb.vl_principal_debito + deb.vl_multa_debito) > #{valorUm}
+                    </if>
+                </if>
+
+                <if test="tipoValor == 'VALOR_JUROS'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND deb.vl_juros >= #{valorUm} AND deb.vl_juros <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND deb.vl_juros = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND deb.vl_juros != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND deb.vl_juros < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND deb.vl_juros > #{valorUm}
+                    </if>
+                </if>
+
+                <if test="tipoValor == 'VALOR_ENCARGOS'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND deb.vl_encargos >= #{valorUm} AND deb.vl_encargos <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND deb.vl_encargos = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND deb.vl_encargos != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND deb.vl_encargos < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND deb.vl_encargos > #{valorUm}
+                    </if>
+                </if>
+
+                <if test="tipoValor == 'VALOR_HONORARIOS'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND deb.vl_honorarios >= #{valorUm} AND deb.vl_honorarios <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND deb.vl_honorarios = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND deb.vl_honorarios != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND deb.vl_honorarios < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND deb.vl_honorarios > #{valorUm}
+                    </if>
+                </if>
+
+                <if test="tipoValor == 'SALDO_DEVEDOR'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND deb.vl_saldo_devedor >= #{valorUm} AND deb.vl_saldo_devedor <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND deb.vl_saldo_devedor = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND deb.vl_saldo_devedor != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND deb.vl_saldo_devedor < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND deb.vl_saldo_devedor > #{valorUm}
+                    </if>
+                </if>
+
+            </if>
+
+            <if test="consultaGenerica != null">
+                <![CDATA[
+                AND (
+                    p.nr_documento_pessoa LIKE #{consultaGenerica,jdbcType=VARCHAR} || '%'
+                    OR p.nr_cgf_pessoa LIKE #{consultaGenerica,jdbcType=VARCHAR} || '%'
+                    OR div.nr_inscricao = #{consultaGenerica,jdbcType=VARCHAR} OR vl_principal_debito = CAST(#{consultaGenerica,jdbcType=NUMERIC} AS NUMERIC)
+                    OR vl_saldo_devedor = CAST(#{consultaGenerica,jdbcType=NUMERIC} AS NUMERIC) OR nr_processo_administrativo =  #{consultaGenerica,jdbcType=VARCHAR}
+                )
+                ]]>
+            </if>
+
+            <if test="origemDebito != null and !origemDebito.isEmpty()">
+                AND div.cd_origem_debito::VARCHAR IN
+                <foreach item="item" index="index" collection="origemDebito" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="produtoServico != null and !produtoServico.isEmpty()">
+                AND div.cd_produto_servico::VARCHAR IN
+                <foreach item="item" index="index" collection="produtoServico" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="idsReceitas != null and !idsReceitas.isEmpty()">
+                AND div.cd_tipo_receita::VARCHAR IN
+                <foreach item="item" index="index" collection="idsReceitas" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="faseAtual != null and !faseAtual.isEmpty() and (faseAnterior == null or faseAnterior.isEmpty())">
+                AND fd.fl_fase_atual = true AND fd.cd_fase::VARCHAR IN
+                <foreach item="item" index="index" collection="faseAtual" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="faseAtual != null and !faseAtual.isEmpty() and faseAnterior != null and !faseAnterior.isEmpty()">
+                AND fd.cd_fase::VARCHAR IN
+                <foreach item="item" index="index" collection="faseAtual" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+
+                OR fd.cd_fase::VARCHAR IN
+                <foreach item="item" index="index" collection="faseAnterior" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="faseAnterior != null and !faseAnterior.isEmpty() and (faseAtual == null or faseAtual.isEmpty())">
+                AND fd.fl_fase_anterior = true AND fd.cd_fase::VARCHAR IN
+                <foreach item="item" index="index" collection="faseAnterior" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+        </where>
+    </select>
+
+    <resultMap id="resultMap" type="br.gov.ce.pge.gestao.dto.response.DividaFilterResponseDto">
+
+        <result property="id" column="ci_divida" />
+        <result property="numeroInscricao" column="nr_inscricao" />
+        <result property="cgf" column="nr_cgf_pessoa" />
+        <result property="documento" column="nr_documento_pessoa" />
+        <result property="nomeDevedor" column="nm_pessoa" />
+        <result property="idTipoReceita" column="cd_tipo_receita" />
+        <result property="idFaseAtual" column="cd_fase" />
+        <result property="idFaseAnterior" column="cd_fase" />
+        <result property="saldoDevedor" column="vl_saldo_devedor" />
+        <result property="numeroAI" column="nr_processo_administrativo" />
+        <result property="arquivos" column="tem_anexo" />
+        <result property="tipoDevedor" column="nm_tipo_devedor" />
+        <result property="numeroProcesso" column="nr_processo_administrativo" />
+        <result property="protocoloJudicial" column="nr_protocolo_judicial" />
+        <result property="guiaItcd" column="nr_guia_itcd" />
+        <result property="placa" column="ds_placa_veiculo" />
+        <result property="chassi" column="nr_chassi" />
+        <result property="idOrigemDebito" column="cd_origem_debito" />
+        <result property="idProdutoServico" column="cd_produto_servico" />
+        <result property="dataVencimento" column="dt_vencimento" />
+        <result property="faseAtualEm" column="dt_fase_divida"/>
+
+    </resultMap>
+
+    <select id="findByDividaFilter" resultMap="resultMap">
+        SELECT *,
+        EXISTS (
+        SELECT 1
+        FROM tb_anexo da
+        WHERE div.ci_divida = da.cd_divida
+        ) AS tem_anexo
+        FROM tb_divida div
+        INNER JOIN tb_divida_pessoa dp ON dp.cd_divida = div.ci_divida
+        INNER JOIN tb_pessoa p ON p.ci_pessoa = dp.cd_pessoa
+        INNER JOIN tb_papel_pessoa_divida ppd ON ppd.ci_papel_pessoa_divida = dp.cd_papel_pessoa_divida
+        INNER JOIN tb_debito deb ON deb.cd_divida = div.ci_divida
+        INNER JOIN tb_tipo_devedor tdev ON tdev.ci_tipo_devedor = ppd.cd_tipo_devedor
+        INNER JOIN tb_tipo_pessoa tp ON p.cd_tipo_pessoa = tp.ci_tipo_pessoa
+        LEFT JOIN tb_fase_divida fd ON fd.cd_divida = div.ci_divida
+
+        <where>
+
+            <if test="cpf != null">
+                AND p.nr_documento_pessoa = #{cpf}
+            </if>
+
+            <if test="cnpj != null">
+                AND p.nr_documento_pessoa LIKE #{cnpj} || '%'
+            </if>
+
+            <if test="cgf != null">
+                AND p.nr_cgf_pessoa = #{cgf}
+            </if>
+
+            <if test="nomeDevedor != null">
+                AND (UPPER(p.nm_pessoa) LIKE #{nomeDevedor})
+            </if>
+
+            <if test="numeroInscricao != null">
+                AND div.nr_inscricao = #{numeroInscricao}
+            </if>
+
+            <if test="tipoDevedor != null">
+                <choose>
+                    <when test="tipoDevedor == 'TODOS'">
+                        AND tdev.nm_tipo_devedor != ''
+                    </when>
+                    <otherwise>
+                        AND tdev.ci_tipo_devedor::VARCHAR = #{tipoDevedor}
+                    </otherwise>
+                </choose>
+            </if>
+
+            <if test="numeroProcesso != null">
+                AND div.nr_processo_administrativo = #{numeroProcesso}
+            </if>
+
+            <if test="protocoloJudicial != null">
+                AND div.nr_protocolo_judicial = #{protocoloJudicial}
+            </if>
+
+            <if test="guiaItcd != null">
+                AND div.nr_guia_itcd = #{guiaItcd}
+            </if>
+
+            <if test="numeroAI != null">
+                AND div.nr_processo_administrativo = #{numeroAI}
+            </if>
+
+            <if test="placa != null">
+                AND div.ds_placa_veiculo = #{placa}
+            </if>
+
+            <if test="chassi != null">
+                AND div.nr_chassi = #{chassi}
+            </if>
+
+            <if test="tipoValor != null">
+                <if test="tipoValor == 'VALOR_PRINCIPAL'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND deb.vl_principal_debito >= #{valorUm} AND deb.vl_principal_debito <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND deb.vl_principal_debito = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND deb.vl_principal_debito != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND deb.vl_principal_debito < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND deb.vl_principal_debito > #{valorUm}
+                    </if>
+                </if>
+
+                <if test="tipoValor == 'VALOR_MULTA'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND deb.vl_multa_debito >= #{valorUm} AND deb.vl_multa_debito <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND deb.vl_multa_debito = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND deb.vl_multa_debito != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND deb.vl_multa_debito < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND deb.vl_multa_debito > #{valorUm}
+                    </if>
+                </if>
+
+                <if test="tipoValor == 'SALDO_PRINCIPAL_MULTA'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND (deb.vl_principal_debito + deb.vl_multa_debito) >= #{valorUm} AND (deb.vl_principal_debito + deb.vl_multa_debito) <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND (deb.vl_principal_debito + deb.vl_multa_debito) = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND (deb.vl_principal_debito + deb.vl_multa_debito) != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND (deb.vl_principal_debito + deb.vl_multa_debito) < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND (deb.vl_principal_debito + deb.vl_multa_debito) > #{valorUm}
+                    </if>
+                </if>
+
+                <if test="tipoValor == 'VALOR_JUROS'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND deb.vl_juros >= #{valorUm} AND deb.vl_juros <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND deb.vl_juros = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND deb.vl_juros != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND deb.vl_juros < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND deb.vl_juros > #{valorUm}
+                    </if>
+                </if>
+
+                <if test="tipoValor == 'VALOR_ENCARGOS'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND deb.vl_encargos >= #{valorUm} AND deb.vl_encargos <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND deb.vl_encargos = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND deb.vl_encargos != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND deb.vl_encargos < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND deb.vl_encargos > #{valorUm}
+                    </if>
+                </if>
+
+                <if test="tipoValor == 'VALOR_HONORARIOS'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND deb.vl_honorarios >= #{valorUm} AND deb.vl_honorarios <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND deb.vl_honorarios = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND deb.vl_honorarios != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND deb.vl_honorarios < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND deb.vl_honorarios > #{valorUm}
+                    </if>
+                </if>
+
+                <if test="tipoValor == 'SALDO_DEVEDOR'">
+                    <if test="operador == 'ENTRE'">
+                        <![CDATA[ AND deb.vl_saldo_devedor >= #{valorUm} AND deb.vl_saldo_devedor <= #{valorDois} ]]>
+                    </if>
+
+                    <if test="operador == 'IGUAL'">
+                        AND deb.vl_saldo_devedor = #{valorUm}
+                    </if>
+
+                    <if test="operador == 'DIFERENTE'">
+                        AND deb.vl_saldo_devedor != #{valorUm}
+                    </if>
+
+                    <if test="operador == 'MENOR_QUE'">
+                        <![CDATA[ AND deb.vl_saldo_devedor < #{valorUm} ]]>
+                    </if>
+
+                    <if test="operador == 'MAIOR_QUE'">
+                        AND deb.vl_saldo_devedor > #{valorUm}
+                    </if>
+                </if>
+
+            </if>
+
+            <if test="consultaGenerica != null">
+                <![CDATA[
+                AND (
+                    p.nr_documento_pessoa LIKE #{consultaGenerica,jdbcType=VARCHAR} || '%'
+                    OR p.nr_cgf_pessoa LIKE #{consultaGenerica,jdbcType=VARCHAR} || '%'
+                    OR div.nr_inscricao = #{consultaGenerica,jdbcType=VARCHAR} OR vl_principal_debito = CAST(#{consultaGenerica,jdbcType=NUMERIC} AS NUMERIC)
+                    OR vl_saldo_devedor = CAST(#{consultaGenerica,jdbcType=NUMERIC} AS NUMERIC) OR nr_processo_administrativo =  #{consultaGenerica,jdbcType=VARCHAR}
+                )
+                ]]>
+            </if>
+
+            <if test="origemDebito != null and !origemDebito.isEmpty()">
+                AND div.cd_origem_debito::VARCHAR IN
+                <foreach item="item" index="index" collection="origemDebito" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="produtoServico != null and !produtoServico.isEmpty()">
+                AND div.cd_produto_servico::VARCHAR IN
+                <foreach item="item" index="index" collection="produtoServico" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="idsReceitas != null and !idsReceitas.isEmpty()">
+                AND div.cd_tipo_receita::VARCHAR IN
+                <foreach item="item" index="index" collection="idsReceitas" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="faseAtual != null and !faseAtual.isEmpty() and (faseAnterior == null or faseAnterior.isEmpty())">
+                AND fd.fl_fase_atual = true AND fd.cd_fase::VARCHAR IN
+                <foreach item="item" index="index" collection="faseAtual" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="faseAtual != null and !faseAtual.isEmpty() and faseAnterior != null and !faseAnterior.isEmpty()">
+                AND fd.cd_fase::VARCHAR IN
+                <foreach item="item" index="index" collection="faseAtual" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+
+                OR fd.cd_fase::VARCHAR IN
+                <foreach item="item" index="index" collection="faseAnterior" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="faseAnterior != null and !faseAnterior.isEmpty() and (faseAtual == null or faseAtual.isEmpty())">
+                AND fd.fl_fase_anterior = true AND fd.cd_fase::VARCHAR IN
+                <foreach item="item" index="index" collection="faseAnterior" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+        </where>
+
+        <if test="orderBy != null">
+            ORDER BY
+            ${orderBy}
+        </if>
+
+        OFFSET #{offset} ROWS
+        FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+</mapper>

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-gestao-atributos-divida
+  namespace: dev
+  labels:
+    app: ms-gestao-atributos-divida
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-gestao-atributos-divida
+  strategy: 
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: ms-gestao-atributos-divida
+    spec:
+      containers:
+      - name: ms-gestao-atributos-divida
+        image: gcr.io/pge-ce-dev-a937/$IMAGE
+        env:
+        - name: DB_USER
+          value: "db_origem_debito_user"
+        - name: DB_PASS
+          value: "u*hVbO=0>(gPxQVz"
+        - name: DB_DATABASE
+          value: "db_origem_debito"
+        - name: DB_HOST
+          value: "10.102.32.5"
+        - name: DB_PORT
+          value: "5432"
+        ports:
+        - containerPort: 8080

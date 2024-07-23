@@ -1,0 +1,5 @@
+
+¶
+java:S6204<"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(æÙó¹J$0394dbed-a967-4639-b43d-34885eefd69c
+…
+java:S2147\"DCombine this catch with the one at line 90, which has the same body.(¢­§ŒÿÿÿÿÿJ$2d88a385-5906-401d-b6ad-3168541ecf7c

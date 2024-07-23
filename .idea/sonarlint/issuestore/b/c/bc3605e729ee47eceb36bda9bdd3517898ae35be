@@ -1,0 +1,23 @@
+
+â
+java:S4449¤"Annotate the parameter with @javax.annotation.Nullable in method 'handleExceptionInternal' declaration, or make sure that null can not be passed as argument.(Úâ…”8Ë£¾ò€2J$8c15599c-5833-4f31-8b62-800e9f141d98
+â
+java:S4449³"Annotate the parameter with @javax.annotation.Nullable in method 'handleExceptionInternal' declaration, or make sure that null can not be passed as argument.(Úâ…”8Ë£¾ò€2J$ca8ba180-a992-4e22-a89b-514fcd150b11
+á
+java:S44492"Annotate the parameter with @javax.annotation.Nullable in method 'handleExceptionInternal' declaration, or make sure that null can not be passed as argument.(Úâ…”8–Êò€2J$90937efe-3c63-4ebf-9797-924a9d66d8a2
+â
+java:S4449•"Annotate the parameter with @javax.annotation.Nullable in method 'handleExceptionInternal' declaration, or make sure that null can not be passed as argument.(Úâ…”8Ë£¾ò€2J$3e82e532-8904-43cb-8db7-d72a6710543e
+†
+java:S1845""½Rename field "LOGGER" to prevent any misunderstanding/clash with field "logger" defined in superclass "org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler".(Ş„‘€şÿÿÿÿ8ê£¾ò€2J$5d610c41-43b2-4411-9723-21579ef08339
+i
+java:S1452%"&Remove usage of generic wildcard type.(‘ û¡8ê£¾ò€2J$0dd45a12-e831-4dd8-a0ec-d708870a68b3
+©
+java:S6201e"fReplace this instanceof check and cast with 'instanceof InvalidFormatException invalidFormatException'(ÇÂ²Ş8ù£¾ò€2J$11a2a888-3086-4ac0-be48-973eee446ff2
+½
+java:S6204m"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ª™¨¹8ù£¾ò€2J$08e076ab-e153-4e6d-a6f4-2bb627d92d91
+®
+java:S6201u"fReplace this instanceof check and cast with 'instanceof DateTimeParseException dateTimeParseException'(”Á‚Õùÿÿÿÿ8ù£¾ò€2J$ded475ef-0c88-4c39-a9b3-24d9cc6e92ab
+o
+java:S1452¬"&Remove usage of generic wildcard type.( ¯ıùùÿÿÿÿ8ù£¾ò€2J$2b34f749-dc61-47dc-86c2-90e632f402b2
+t
+java:S1068",Remove this unused "REGISTRO" private field.(¢ÈÏ»şÿÿÿÿ8ù£¾ò€2J$7f109f96-1c16-4452-adcb-e731e346c8c0

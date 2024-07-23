@@ -1,0 +1,53 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="CondicaoAcessoDao">
+
+    <select id="countHistorysUpdates" resultType="int">
+        SELECT COUNT(*)
+        FROM tb_auditoria a
+        INNER JOIN tb_condicao_acesso_aud c ON a.ci_auditoria = c.cd_auditoria
+        WHERE a.ci_auditoria IS NOT NULL
+        AND a.ds_dados_antigos IS NOT NULL
+        AND c.ci_condicao_acesso = #{id}
+        AND NOT EXISTS (
+	        SELECT 1
+	        FROM tb_condicao_acesso_aud
+	        WHERE
+	            ci_condicao_acesso = #{id}
+	            AND tp_movimento = #{tipoMovimento}
+        );
+    </select>
+
+    <resultMap id="resultMapAuditoria" type="br.gov.ce.pge.gestao.dto.response.AuditoriaCondicaoAcessoDto">
+
+        <result property="id" column="ci_condicao_acesso" />
+        <result property="dataMovimento" column="dt_movimento" />
+        <result property="nomeUsuario" column="nm_usuario" />
+        <result property="dadosAntigos" column="ds_dados_antigos" />
+
+    </resultMap>
+
+    <select id="findHistorysUpdates" resultMap="resultMapAuditoria">
+        SELECT 
+        	a.dt_movimento, a.nm_usuario, a.ds_dados_antigos, c.ci_condicao_acesso
+        FROM tb_auditoria a
+        INNER JOIN tb_condicao_acesso_aud c ON a.ci_auditoria = c.cd_auditoria
+        WHERE a.ci_auditoria IS NOT NULL
+        AND a.ds_dados_antigos IS NOT NULL
+        AND c.ci_condicao_acesso = #{id}
+        AND NOT EXISTS (
+	        SELECT 1
+	        FROM tb_condicao_acesso_aud
+	        WHERE
+                ci_condicao_acesso = #{id}
+	            AND tp_movimento = #{tipoMovimento}
+    	 )
+        ORDER BY a.ci_auditoria DESC
+        OFFSET #{offset} ROWS
+        FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+    
+</mapper>

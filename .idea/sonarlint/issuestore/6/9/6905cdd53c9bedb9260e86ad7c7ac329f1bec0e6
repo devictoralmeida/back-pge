@@ -1,0 +1,24 @@
+
+‰
+java:S2259G"FA "NullPointerException" could be thrown; "getBody()" can return null.(—ê•¨8ûÅà§ê1J$d4b7a4b7-3d7e-4d78-8527-5290f21c40aa
+…
+java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞ8‡Æà§ê1J$9763b759-6a71-45bd-b6de-d6b97ce1a246
+…
+java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞ8ˆÆà§ê1J$bfbb4059-ab88-4df8-a598-661bc1b68f7e
+…
+java:S6813!"BRemove this field injection and use constructor injection instead.(êæÄŞ8ˆÆà§ê1J$cf504ef1-820d-440b-b797-c6f12dc0a4f9
+…
+java:S6813$"BRemove this field injection and use constructor injection instead.(êæÄŞ8ˆÆà§ê1J$c94fa850-369a-44cc-87ee-b289773badc9
+…
+java:S6813'"BRemove this field injection and use constructor injection instead.(êæÄŞ8ˆÆà§ê1J$6d2fab8c-8299-4954-b9ad-44d6a02cb4f9
+i
+java:S1452+"&Remove usage of generic wildcard type.(ÛóÅ°8˜Æà§ê1J$60fe841d-732e-4490-a460-03d6324435eb
+n
+java:S14520"&Remove usage of generic wildcard type.(åÅõûÿÿÿÿ8Æà§ê1J$3aa05d52-40f5-456e-96e8-be9e75c571ae
+ƒ
+java:S1854?";Remove this useless assignment to local variable "usuario".(Ôã¯½ùÿÿÿÿ8£Æà§ê1J$e00e29dc-7874-4f2a-ab43-f8bc75516440
+i
+java:S14526"&Remove usage of generic wildcard type.(ÀÍèµ8¤Æà§ê1J$6300d3b5-a3f7-497c-9f1e-b11e21ecb8c2
+
+java:S6201A"HReplace this instanceof check and cast with 'instanceof Usuario usuario'(×Ô«íùÿÿÿÿ8¹Æà§ê1J$59637c54-5488-4914-9f44-84eb20737554
+]	java:S125I"<This block of commented-out lines of code should be removed.(¸ÄÜœúÿÿÿÿ8‡Èç§ê1

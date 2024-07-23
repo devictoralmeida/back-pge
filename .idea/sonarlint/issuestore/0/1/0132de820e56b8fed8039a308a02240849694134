@@ -1,0 +1,9 @@
+
+
+java:S6204#"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ÈÔôÒ
+•
+java:S6204%"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(“¶Ùñûÿÿÿÿ
+
+java:S6204("zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(§¸ãŠ
+
+java:S6204H"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(×ŸÓñ

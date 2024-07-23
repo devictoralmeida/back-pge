@@ -1,0 +1,78 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="FaseDividaDao">
+
+
+    <resultMap id="resultFaseDividaFilter"
+               type="br.gov.ce.pge.gestao.dto.response.FaseDividaResponseDto">
+        <result property="id" column="ci_fase_divida"/>
+        <result property="codigo" column="cd_fase_divida"/>
+        <result property="nome" column="nm_fase_divida"/>
+        <result property="descricao" column="ds_fase_divida"/>
+        <result property="tipoMovimentacao" column="tp_movimentacao"/>
+        <result property="situacao" column="ds_situacao_fase_divida"/>
+        <result property="exigeCobranca" column="fl_exigivel_cobranca"/>
+        <result property="dataCriacao" column="dt_criacao"/>
+        <result property="dataAtualizacao" column="dt_atualizacao"/>
+        <collection property="tipoCobranca" ofType="br.gov.ce.pge.gestao.enums.TipoCobranca">
+            <result column="tp_cobranca"/>
+        </collection>
+    </resultMap>
+
+    <select id="findFaseDividaByFilter" resultMap="resultFaseDividaFilter">
+
+        SELECT
+        ci_fase_divida,
+        fd.cd_fase_divida,
+        nm_fase_divida,
+        ds_fase_divida,
+        tp_movimentacao,
+        ds_situacao_fase_divida,
+        fl_exigivel_cobranca,
+        dt_criacao,
+        dt_atualizacao,
+        tp_cobranca
+        FROM tb_fase_divida fd
+        <if test="tipoCobranca != null ">
+            INNER JOIN tb_fase_divida_tp_cobranca tbc ON tbc.cd_fase_divida = fd.ci_fase_divida
+        </if>
+        <if test="tipoCobranca == null ">
+            LEFT JOIN tb_fase_divida_tp_cobranca tbc ON tbc.cd_fase_divida = fd.ci_fase_divida
+        </if>
+
+        <where>
+
+            <if test="nome != null">
+                AND upper(fd.nm_fase_divida) like #{nome}
+            </if>
+
+            <if test="codigo != null">
+                AND fd.cd_fase_divida like #{codigo}
+            </if>
+
+            <if test="tipoMovimentacao != null">
+                AND fd.tp_movimentacao = #{tipoMovimentacao}
+            </if>
+
+            <if test="situacao != null">
+                AND fd.ds_situacao_fase_divida = #{situacao}
+            </if>
+
+            <if test="exigeCobranca != null">
+                AND fd.fl_exigivel_cobranca = #{exigeCobranca}
+            </if>
+
+            <if test="tipoCobranca != null ">
+                AND tbc.tp_cobranca::VARCHAR IN (#{tipoCobranca})
+            </if>
+
+        </where>
+
+        ORDER BY fd.cd_fase_divida ASC
+
+    </select>
+
+</mapper>

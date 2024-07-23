@@ -1,0 +1,17 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/pge-ce-dev-a937/ms-eureka-server-dev:latest",
+        ".",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "gcr.io/pge-ce-dev-a937/ms-eureka-server-dev:latest",
+      ]
+options:
+  logging: CLOUD_LOGGING_ONLY

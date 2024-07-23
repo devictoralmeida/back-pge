@@ -1,0 +1,75 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="DevedorDao">
+    <select id="findUnique" resultType="int">
+        SELECT count(*) from tb_divida div
+        INNER JOIN tb_divida_pessoa dp ON dp.cd_divida = div.ci_divida
+        INNER JOIN tb_pessoa p ON p.ci_pessoa = dp.cd_pessoa
+        INNER JOIN tb_debito deb ON deb.cd_divida = div.ci_divida
+        INNER JOIN tb_status_debito stdeb ON deb.cd_status_debito = stdeb.ci_status_debito
+        INNER JOIN tb_papel_pessoa_divida ppd ON ppd.ci_papel_pessoa_divida = dp.cd_papel_pessoa_divida
+        INNER JOIN tb_tipo_papel_pessoa_divida tppd ON tppd.ci_tipo_papel_pessoa_divida =
+        ppd.cd_tipo_papel_pessoa_divida
+
+        <where>
+            p.nr_documento_pessoa IN
+            <foreach item="item" index="index" collection="documentos" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            AND (
+            (
+            stdeb.ci_status_debito::VARCHAR IN
+            <foreach item="item" index="index" collection="statusDebitos" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            AND deb.dt_vencimento IN
+            <foreach item="item" index="index" collection="datasVencimentosDebitos" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            AND deb.dt_atualizacao_monetaria IN
+            <foreach item="item" index="index" collection="datasAtualizacaoMonetariaDebitos" open="(" separator=","
+                     close=")">
+                #{item}
+            </foreach>
+            <if test="valoresPrincipaisDebitos != null">
+                AND deb.vl_principal_debito IN
+                <foreach item="item" index="index" collection="valoresPrincipaisDebitos" open="(" separator=","
+                         close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="valoresMultasDebitos != null">
+                AND deb.vl_multa_debito IN
+                <foreach item="item" index="index" collection="valoresMultasDebitos" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="datasConstituicoesDefinitivasDebitos != null">
+                AND deb.dt_constituicao_definitiva IN
+                <foreach item="item" index="index" collection="datasConstituicoesDefinitivasDebitos" open="("
+                         separator=","
+                         close=")">
+                    #{item}
+                </foreach>
+            </if>
+            AND (
+            (ppd.cd_qualificacao_corresponsavel NOTNULL)
+            OR (
+            deb.ds_referencia_inicial IN
+            <foreach item="item" index="index" collection="referenciasIniciaisDebitos" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            <if test="referenciasFinaisDebitos != null">
+                AND deb.ds_referencia_final IN
+                <foreach item="item" index="index" collection="referenciasFinaisDebitos" open="(" separator=","
+                         close=")">
+                    #{item}
+                </foreach>
+            </if>
+            )
+            )
+            )
+            )
+        </where>
+    </select>
+</mapper>

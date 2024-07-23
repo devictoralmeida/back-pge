@@ -1,0 +1,25 @@
+
+•
+java:S6204J"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ãšõùÿÿÿÿ
+
+java:S6204K"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(³ö¥W
+•
+java:S6204}"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ãšõùÿÿÿÿ
+
+java:S6204~"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(³ö¥W
+–
+java:S6204Œ"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ŒïşÏüÿÿÿÿ
+Y
+java:S1612Œ"=Replace this lambda with method reference 'Permissao::getId'.(ŒïşÏüÿÿÿÿ
+‘
+java:S6204"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ñË÷˜
+R
+java:S1612";Replace this lambda with method reference 'Sistema::getId'.(ñË÷˜
+‘
+java:S6204›"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ª™¨¹
+‘
+java:S6204¥"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ª™¨¹
+‘
+java:S6204®"zReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()' and ensure that the list is unmodified.(ª™¨¹
+f
+java:S1128#"KRemove this unused import 'br.gov.ce.pge.gestao.shared.util.HistoricoUtil'.(¿Ç»ñıÿÿÿÿ

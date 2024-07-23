@@ -1,0 +1,282 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="UsuarioDao">
+
+    <select id="countfindByFilter" resultType="int">
+        select COUNT(DISTINCT u.ci_usuario)
+        from tb_usuario u
+        inner join tb_usuario_sistema us ON us.cd_usuario = u.ci_usuario
+        inner join tb_sistema s ON s.ci_sistema = us.cd_sistema
+        inner join tb_usuario_perfil_acesso upa ON u.ci_usuario = upa.cd_usuario
+        inner join tb_perfil_acesso pa ON pa.ci_perfil_acesso = upa.cd_perfil_acesso
+
+        <where>
+
+            <if test="nome != null">
+                AND UPPER(u.nm_usuario) LIKE #{nome}
+            </if>
+
+            <if test="tipoUsuario != null">
+                AND u.tp_usuario = #{tipoUsuario}
+            </if>
+
+            <if test="cpf != null">
+                AND u.nr_cpf_usuario = #{cpf}
+            </if>
+
+            <if test="orgao != null">
+                AND u.ds_orgao_usuario = #{orgao}
+            </if>
+
+            <if test="area != null">
+                AND u.ds_area_usuario = #{area}
+            </if>
+
+            <if test="email != null">
+                AND UPPER(u.ds_email_usuario) LIKE #{email}
+            </if>
+
+            <if test="usuarioRede != null">
+                AND u.nm_usuario_rede = #{usuarioRede}
+            </if>
+
+            <if test="situacao != null">
+                AND u.ds_situacao_usuario = #{situacao}
+            </if>
+
+            <if test="perfisAcessos != null and perfisAcessos.size() > 0">
+                AND pa.ci_perfil_acesso::VARCHAR IN
+                <foreach item="item" index="index" collection="perfisAcessos" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="sistemas != null and sistemas.size() > 0">
+                AND s.ci_sistema::VARCHAR IN
+                <foreach item="item" index="index" collection="sistemas" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+        </where>
+    </select>
+
+    <resultMap id="resultMap" type="br.gov.ce.pge.gestao.dto.response.UsuarioFilterResponseDto">
+
+        <result property="id" column="ci_usuario" />
+        <result property="tipoUsuario" column="tp_usuario" />
+        <result property="nome" column="nm_usuario" />
+        <result property="cpf" column="nr_cpf_usuario" />
+        <result property="orgao" column="ds_orgao_usuario" />
+        <result property="area" column="ds_area_usuario" />
+        <result property="email" column="ds_email_usuario" />
+        <result property="usuarioRede" column="nm_usuario_rede" />
+        <result property="situacao" column="ds_situacao_usuario" />
+        <result property="dataCadastro" column="dt_criacao" />
+        <result property="dataAtualizacao" column="dt_atualizacao" />
+        <result property="dataAceiteTermoPortalOrigens" column="dt_aceite_termo_portal_origens" />
+        <result property="dataAceiteTermoPortalDivida" column="dt_aceite_termo_portal_divida" />
+        <result property="dataUltimoAcesso" column="dt_ultimo_acesso_usuario" />
+
+    </resultMap>
+
+    <select id="findByFilter" resultMap="resultMap">
+        select distinct u.*
+        from tb_usuario u
+        inner join tb_usuario_sistema us ON us.cd_usuario = u.ci_usuario
+        inner join tb_sistema s ON s.ci_sistema = us.cd_sistema
+        inner join tb_usuario_perfil_acesso upa ON u.ci_usuario = upa.cd_usuario
+        inner join tb_perfil_acesso pa ON pa.ci_perfil_acesso = upa.cd_perfil_acesso
+
+        <where>
+
+            <if test="nome != null">
+                AND UPPER(u.nm_usuario) LIKE #{nome}
+            </if>
+
+            <if test="tipoUsuario != null">
+                AND u.tp_usuario = #{tipoUsuario}
+            </if>
+
+            <if test="cpf != null">
+                AND u.nr_cpf_usuario = #{cpf}
+            </if>
+
+            <if test="orgao != null">
+                AND u.ds_orgao_usuario = #{orgao}
+            </if>
+
+            <if test="area != null">
+                AND u.ds_area_usuario = #{area}
+            </if>
+
+            <if test="email != null">
+                AND UPPER(u.ds_email_usuario) LIKE #{email}
+            </if>
+
+            <if test="usuarioRede != null">
+                AND u.nm_usuario_rede = #{usuarioRede}
+            </if>
+
+            <if test="situacao != null">
+                AND u.ds_situacao_usuario = #{situacao}
+            </if>
+
+            <if test="perfisAcessos != null and perfisAcessos.size() > 0">
+                AND pa.ci_perfil_acesso::VARCHAR IN
+                <foreach item="item" index="index" collection="perfisAcessos" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="sistemas != null and sistemas.size() > 0">
+                AND s.ci_sistema::VARCHAR IN
+                <foreach item="item" index="index" collection="sistemas" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+        </where>
+
+        <if test="orderBy != null">
+            ORDER BY
+            ${orderBy}
+        </if>
+
+        OFFSET #{offset} ROWS
+        FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+    <resultMap id="resultMapSystem" type="br.gov.ce.pge.gestao.dto.response.SistemaFilterResponseDto">
+
+        <result property="id" column="ci_sistema" />
+        <result property="nome" column="nm_sistema" />
+        <result property="idUsuario" column="ci_usuario" />
+        <result property="idPerfil" column="cd_perfil_acesso" />
+
+    </resultMap>
+
+    <select id="findByFilterSystem" resultMap="resultMapSystem">
+        SELECT distinct u.ci_usuario, s.ci_sistema, s.nm_sistema, pas.cd_perfil_acesso
+        from tb_usuario_sistema us
+        inner join tb_sistema s ON s.ci_sistema = us.cd_sistema
+        join tb_usuario u ON us.cd_usuario = u.ci_usuario
+        inner join tb_perfil_acesso_sistema pas ON s.ci_sistema = pas.cd_sistema
+
+        <where>
+
+            <if test="nome != null">
+                AND UPPER(u.nm_usuario) LIKE #{nome}
+            </if>
+
+            <if test="tipoUsuario != null">
+                AND u.tp_usuario = #{tipoUsuario}
+            </if>
+
+            <if test="cpf != null">
+                AND u.nr_cpf_usuario = #{cpf}
+            </if>
+
+            <if test="orgao != null">
+                AND u.ds_orgao_usuario = #{orgao}
+            </if>
+
+            <if test="area != null">
+                AND u.ds_area_usuario = #{area}
+            </if>
+
+            <if test="email != null">
+                AND UPPER(u.ds_email_usuario) LIKE #{email}
+            </if>
+
+            <if test="usuarioRede != null">
+                AND u.nm_usuario_rede = #{usuarioRede}
+            </if>
+
+            <if test="situacao != null">
+                AND u.ds_situacao_usuario = #{situacao}
+            </if>
+
+            <if test="sistemas != null and sistemas.size() > 0">
+                AND us.cd_usuario IN (
+                SELECT cd_usuario FROM tb_usuario_sistema WHERE cd_sistema IN
+                <foreach item="item" index="index" collection="sistemas" open="(" separator="," close=")">
+                    #{item}::uuid
+                </foreach>
+                )
+            </if>
+
+        </where>
+
+
+    </select>
+
+    <resultMap id="resultMapPerfil" type="br.gov.ce.pge.gestao.dto.response.PerfilAcessoFilterResponseDto">
+
+        <result property="id" column="ci_perfil_acesso" />
+        <result property="nome" column="nm_perfil_acesso" />
+        <result property="situacao" column="ds_situacao_perfil_acesso" />
+        <result property="dataCadastro" column="dt_criacao" />
+        <result property="dataAtualizacao" column="dt_atualizacao" />
+        <result property="idUsuario" column="ci_usuario" />
+    </resultMap>
+
+    <select id="findByFilterPerfil" resultMap="resultMapPerfil">
+
+        SELECT distinct u.ci_usuario, pa.ci_perfil_acesso, pa.nm_perfil_acesso, pa.ds_situacao_perfil_acesso, pa.dt_criacao, pa.dt_atualizacao
+        from tb_usuario_perfil_acesso upa
+        inner join tb_perfil_acesso pa ON pa.ci_perfil_acesso = upa.cd_perfil_acesso
+        join tb_usuario u ON upa.cd_usuario = u.ci_usuario
+        inner join tb_perfil_acesso_sistema pas ON pa.ci_perfil_acesso = pas.cd_perfil_acesso
+
+        <where>
+
+            <if test="nome != null">
+                AND UPPER(u.nm_usuario) LIKE #{nome}
+            </if>
+
+            <if test="tipoUsuario != null">
+                AND u.tp_usuario = #{tipoUsuario}
+            </if>
+
+            <if test="cpf != null">
+                AND u.nr_cpf_usuario = #{cpf}
+            </if>
+
+            <if test="orgao != null">
+                AND u.ds_orgao_usuario = #{orgao}
+            </if>
+
+            <if test="area != null">
+                AND u.ds_area_usuario = #{area}
+            </if>
+
+            <if test="email != null">
+                AND UPPER(u.ds_email_usuario) LIKE #{email}
+            </if>
+
+            <if test="usuarioRede != null">
+                AND u.nm_usuario_rede = #{usuarioRede}
+            </if>
+
+            <if test="situacao != null">
+                AND u.ds_situacao_usuario = #{situacao}
+            </if>
+
+            <if test="perfisAcessos != null and perfisAcessos.size() > 0">
+                AND upa.cd_usuario IN (
+                SELECT cd_usuario FROM tb_usuario_perfil_acesso WHERE cd_perfil_acesso IN
+                <foreach item="item" index="index" collection="perfisAcessos" open="(" separator="," close=")">
+                    #{item}::uuid
+                </foreach>
+                )
+            </if>
+
+        </where>
+
+
+    </select>
+
+</mapper>

@@ -1,0 +1,21 @@
+
+™	java:S117—"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ä–Éˆüÿÿÿÿ8À‹ß§ê1J$3106f121-f67b-4d3a-a226-d373dbefa42b
+
+java:S2259ˆ"FA "NullPointerException" could be thrown; "getBody()" can return null.(…”èÿÿÿÿÿ8ÄŒß§ê1J$258855a3-b300-4475-b2ee-fe5b469ac883
+‰
+java:S2259?"FA "NullPointerException" could be thrown; "response" is nullable here.(€ä¶¸8ÃŒß§ê1J$fecbe34f-c799-4cd0-ad4b-36cab0dbc2e1
+
+java:S2259¯"FA "NullPointerException" could be thrown; "getBody()" can return null.(¹ß·±ıÿÿÿÿ8ÄŒß§ê1J$5bd08efb-523d-4a71-87e8-0cf22220bfed
+…
+java:S6813&"BRemove this field injection and use constructor injection instead.(êæÄŞ8ÕŒß§ê1J$45a94884-de27-4277-bd0e-620a809c748f
+…
+java:S6813)"BRemove this field injection and use constructor injection instead.(êæÄŞ8ÕŒß§ê1J$37ddf420-3f53-42c1-b8db-7e05591f5549
+…
+java:S6813,"BRemove this field injection and use constructor injection instead.(êæÄŞ8ÕŒß§ê1J$26ef3155-c02e-44ac-8e4f-d0b1d8eb079b
+…
+java:S6813/"BRemove this field injection and use constructor injection instead.(êæÄŞ8ÕŒß§ê1J$9bf6bdfd-9ccc-40ba-bc67-b31db5f218d3
+…
+java:S68132"BRemove this field injection and use constructor injection instead.(êæÄŞ8ÕŒß§ê1J$28defc44-361c-4534-9e76-c37a2f3de2d2
+…
+java:S68135"BRemove this field injection and use constructor injection instead.(êæÄŞ8ÕŒß§ê1J$6320dbc6-bd38-4090-a849-7576ba0ea186
+ƒ	java:S125h"<This block of commented-out lines of code should be removed.(ÙÎ‰úÿÿÿÿ8Ë¯æ§ê1J$f9c42e63-2b7e-484b-9052-9bda750eda1d
